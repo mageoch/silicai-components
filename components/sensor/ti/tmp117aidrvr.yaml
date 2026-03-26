@@ -7,6 +7,30 @@ component:
   category: sensor
   package: WSON-6
   datasheet: "https://www.ti.com/lit/ds/symlink/tmp117.pdf"
+  kicad_symbol: "Sensor_Temperature:TMP117xxYBG"
+
+  temperature_range:
+    operating:
+      min: { value: -40, unit: °C }
+      max: { value: 125, unit: °C }
+    storage:
+      min: { value: -55, unit: °C }
+      max: { value: 150, unit: °C }
+    junction_max:          { value: 125, unit: °C }
+    thermal_resistance_ja: { value: 88.6, unit: °C/W }   # WSON-6
+
+  power_consumption:
+    - mode: active_conversion
+      description: "Continuous temperature conversion at 1 Hz"
+      rail: vplus
+      current: { value: 135, unit: µA }
+      conditions: "V+=3.3V, 1 Hz conversion rate"
+    - mode: shutdown
+      description: "Conversion disabled via register"
+      rail: vplus
+      current: { value: 0.25, unit: µA }
+      current_max: { value: 1, unit: µA }
+      conditions: "V+=3.3V, shutdown mode"
 
   absolute_maximum_ratings:
     - parameter: supply_voltage

@@ -1,0 +1,118 @@
+$schema: "https://github.com/mageoch/silicai/schema/component.schema.json"
+$schema_version: "0.1.0"
+
+component:
+  mpn: AP2112K-3.3TRG1
+  manufacturer: Diodes Inc.
+  category: power_ic
+  package: SOT-23-5
+  datasheet: "https://www.diodes.com/assets/Datasheets/AP2112.pdf"
+  kicad_symbol: "Regulator_Linear:AP2112K-3.3"
+
+  absolute_maximum_ratings:
+    - parameter: input_voltage
+      pins: [VIN]
+      unit: V
+      max: 6.0
+    - parameter: enable_voltage
+      pins: [EN]
+      unit: V
+      max: 6.0
+    - parameter: output_current
+      pins: [VOUT]
+      unit: mA
+      max: 600
+
+  recommended_operating_conditions:
+    - parameter: input_voltage
+      pins: [VIN]
+      unit: V
+      min: 2.5
+      nom: 5.0
+      max: 6.0
+    - parameter: output_voltage
+      pins: [VOUT]
+      unit: V
+      nom: 3.3
+    - parameter: output_current
+      pins: [VOUT]
+      unit: mA
+      min: 0
+      max: 600
+    - parameter: dropout_voltage
+      pins: [VIN, VOUT]
+      unit: mV
+      nom: 340   # at 600 mA load
+
+  temperature_range:
+    operating:
+      min: { value: -40, unit: °C }
+      max: { value: 125, unit: °C }
+    storage:
+      min: { value: -65, unit: °C }
+      max: { value: 150, unit: °C }
+    junction_max:          { value: 125, unit: °C }
+    thermal_resistance_ja: { value: 250, unit: °C/W }   # SOT-23-5, still air
+
+  power_consumption:
+    - mode: enabled
+      description: "Regulator enabled, quiescent current with no load"
+      rail: vin
+      current: { value: 55, unit: µA }
+      current_max: { value: 100, unit: µA }
+      conditions: "VIN=5V, VOUT=3.3V, no load"
+    - mode: shutdown
+      description: "EN pin low, regulator disabled"
+      rail: vin
+      current: { value: 0.01, unit: µA }
+      current_max: { value: 1, unit: µA }
+      conditions: "VIN=5V, EN=0V"
+
+  rails:
+    - id: vin
+      net: VIN
+      per_pin_decoupling:
+        - type: capacitor
+          capacitance: { value: 1000, unit: nF }
+          voltage_rating: { value: 10, unit: V }
+          dielectric: [X5R, X7R]
+          placement: close
+
+  pins:
+    - number: 1
+      name: VIN
+      direction: power_in
+      rail: vin
+
+    - number: 2
+      name: GND
+      direction: power_in
+      net: GND
+
+    - number: 3
+      name: EN
+      direction: input
+      must_connect: true
+      primary_function:
+        type: enable
+        polarity: active_high
+      required_external:
+        - type: resistor
+          resistance: { value: 100, unit: kΩ }
+          to: VIN   # pull EN high by default to enable the regulator
+
+    - number: 4
+      name: NC
+      direction: no_connect
+
+    - number: 5
+      name: VOUT
+      direction: power_out
+      net: +3V3
+      required_external:
+        - type: capacitor
+          capacitance: { value: 1000, unit: nF }
+          to: GND
+          voltage_rating: { value: 10, unit: V }
+          dielectric: [X5R, X7R]
+          placement: close

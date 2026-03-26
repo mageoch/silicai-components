@@ -1,0 +1,594 @@
+$schema: "https://github.com/mageoch/silicai/schema/component.schema.json"
+$schema_version: "0.1.0"
+
+component:
+  mpn: nRF52840-QDAA-R
+  manufacturer: Nordic Semiconductor
+  category: mcu
+  package: WLCSP-94
+  datasheet: "https://infocenter.nordicsemi.com/pdf/nRF52840_PS_v1.7.pdf"
+  kicad_symbol: "MCU_Nordic:nRF52840"
+
+  absolute_maximum_ratings:
+    - parameter: vdd_voltage
+      pins: [VDD]
+      unit: V
+      max: 3.9
+    - parameter: vddh_voltage
+      pins: [VDDH]
+      unit: V
+      max: 5.8
+    - parameter: vbus_voltage
+      pins: [VBUS]
+      unit: V
+      max: 5.8
+    - parameter: gpio_voltage
+      pins: [AIN0, AIN1, AIN2, AIN3, AIN4, AIN5, AIN6, AIN7, P0.06, P0.07, P0.08]
+      unit: V
+      max: 3.6   # Assumes VDDH = VDD; rises to 5.5V when VDDH > 3.6V
+
+  recommended_operating_conditions:
+    - parameter: vdd_voltage
+      pins: [VDD]
+      unit: V
+      min: 1.7
+      nom: 3.3
+      max: 3.6
+    - parameter: vddh_voltage
+      pins: [VDDH]
+      unit: V
+      min: 2.5
+      nom: 3.3
+      max: 5.5
+    - parameter: vbus_voltage
+      pins: [VBUS]
+      unit: V
+      min: 4.35
+      nom: 5.0
+      max: 5.5
+
+  temperature_range:
+    operating:
+      min: { value: -40, unit: °C }
+      max: { value: 85, unit: °C }
+    storage:
+      min: { value: -40, unit: °C }
+      max: { value: 150, unit: °C }
+    junction_max:       { value: 85, unit: °C }
+    thermal_resistance_ja: { value: 30, unit: °C/W }   # WLCSP-94, still air
+
+  power_consumption:
+    - mode: active_ble_tx
+      description: "Bluetooth 5 TX at 0 dBm, 64 MHz CPU, all RAM on"
+      rail: vdd
+      current: { value: 7.5, unit: mA }
+      conditions: "VDD=3.0V, 64 MHz, BLE TX 0 dBm"
+    - mode: active_ble_rx
+      description: "Bluetooth 5 RX, 64 MHz CPU, all RAM on"
+      rail: vdd
+      current: { value: 7.3, unit: mA }
+      conditions: "VDD=3.0V, 64 MHz, BLE RX"
+    - mode: active_cpu
+      description: "CPU running at 64 MHz, no radio, all peripherals off"
+      rail: vdd
+      current: { value: 3.2, unit: mA }
+      conditions: "VDD=3.0V, 64 MHz, CoreMark benchmark"
+    - mode: sleep_ram_retention
+      description: "System ON sleep, CPU halted, RAM retained, RTC running"
+      rail: vdd
+      current: { value: 3.8, unit: µA }
+      conditions: "VDD=3.0V, 256 kB RAM retained, 32kHz RTC"
+    - mode: system_off
+      description: "Lowest power state; RAM lost, wakeup via GPIO or reset"
+      rail: vdd
+      current: { value: 0.5, unit: µA }
+      conditions: "VDD=3.0V, no RAM retained"
+
+  rails:
+    - id: vdd
+      net: VDD
+      per_pin_decoupling:
+        - type: capacitor
+          capacitance: { value: 100, unit: nF }
+          voltage_rating: { value: 10, unit: V }
+          dielectric: [X5R, X7R]
+          placement: close
+    - id: vddh
+      net: VDDH
+      per_pin_decoupling:
+        - type: capacitor
+          capacitance: { value: 100, unit: nF }
+          voltage_rating: { value: 10, unit: V }
+          dielectric: [X5R, X7R]
+          placement: close
+    - id: vbus
+      net: VBUS
+      per_pin_decoupling:
+        - type: capacitor
+          capacitance: { value: 4700, unit: nF }
+          voltage_rating: { value: 10, unit: V }
+          dielectric: [X5R, X7R]
+          placement: close
+
+  pins:
+    # ── Power supply ──────────────────────────────────────────────────────────
+    - number: B1
+      name: VDD
+      direction: power_in
+      rail: vdd
+
+    - number: A22
+      name: VDD
+      direction: passive
+      rail: vdd
+
+    - number: AD14
+      name: VDD
+      direction: passive
+      rail: vdd
+
+    - number: AD23
+      name: VDD
+      direction: passive
+      rail: vdd
+
+    - number: W1
+      name: VDD
+      direction: passive
+      rail: vdd
+
+    - number: Y2
+      name: VDDH
+      direction: power_in
+      rail: vddh
+
+    - number: AD2
+      name: VBUS
+      direction: power_in
+      rail: vbus
+
+    - number: B7
+      name: VSS
+      direction: power_in
+      net: GND
+
+    - number: EP
+      name: VSS
+      direction: passive
+      net: GND
+
+    - number: F23
+      name: VSS_PA
+      direction: power_in
+      net: GND
+
+    # ── DC-DC converter ───────────────────────────────────────────────────────
+    # DCC/DCCH are the output of the internal DC-DC regulator.
+    # In DC-DC mode: place a 10 μH inductor between DEC1 and VDD input.
+    # In LDO mode: connect DCC/DCCH to VDD; no inductor needed.
+    - number: B3
+      name: DCC
+      direction: power_out
+      net: DCC
+
+    - number: AB2
+      name: DCCH
+      direction: power_out
+      net: DCCH
+
+    # ── Internal regulator decoupling nodes ───────────────────────────────────
+    # Each DECx pin is an internal LDO/regulator output node that requires
+    # a bypass capacitor to GND, placed as close as possible to the ball.
+    - number: C1
+      name: DEC1
+      direction: passive
+      net: DEC1
+      required_external:
+        - type: capacitor
+          capacitance: { value: 100, unit: nF }
+          to: GND
+          placement: close
+
+    - number: A18
+      name: DEC2
+      direction: passive
+      net: DEC2
+      required_external:
+        - type: capacitor
+          capacitance: { value: 100, unit: nF }
+          to: GND
+          placement: close
+
+    - number: D23
+      name: DEC3
+      direction: passive
+      net: DEC3
+      required_external:
+        - type: capacitor
+          capacitance: { value: 100, unit: nF }
+          to: GND
+          placement: close
+
+    - number: B5
+      name: DEC4
+      direction: passive
+      net: DEC4
+      required_external:
+        - type: capacitor
+          capacitance: { value: 100, unit: nF }
+          to: GND
+          placement: close
+
+    - number: N24
+      name: DEC5
+      direction: passive
+      net: DEC5
+      required_external:
+        - type: capacitor
+          capacitance: { value: 100, unit: nF }
+          to: GND
+          placement: close
+
+    - number: E24
+      name: DEC6
+      direction: passive
+      net: DEC6
+      required_external:
+        - type: capacitor
+          capacitance: { value: 100, unit: nF }
+          to: GND
+          placement: close
+
+    - number: AC5
+      name: DECUSB
+      direction: passive
+      net: DECUSB
+      required_external:
+        - type: capacitor
+          capacitance: { value: 4700, unit: nF }
+          to: GND
+          placement: close
+        - type: capacitor
+          capacitance: { value: 100, unit: nF }
+          to: GND
+          placement: close
+
+    # ── 32 MHz crystal (P0.00/P0.01 when used as GPIO) ───────────────────────
+    # Crystal: place between XL1 and XL2; 12 pF load caps to GND on each pin.
+    - number: D2
+      name: XL1
+      direction: passive
+      net: XL1
+      required_external:
+        - type: capacitor
+          capacitance: { value: 12, unit: pF }
+          to: GND
+
+    - number: F2
+      name: XL2
+      direction: passive
+      net: XL2
+      required_external:
+        - type: capacitor
+          capacitance: { value: 12, unit: pF }
+          to: GND
+
+    # ── 32.768 kHz crystal ────────────────────────────────────────────────────
+    # Crystal: place between XC1 and XC2; 12 pF load caps to GND on each pin.
+    - number: B24
+      name: XC1
+      direction: input
+      net: XC1
+      required_external:
+        - type: capacitor
+          capacitance: { value: 12, unit: pF }
+          to: GND
+
+    - number: A23
+      name: XC2
+      direction: input
+      net: XC2
+      required_external:
+        - type: capacitor
+          capacitance: { value: 12, unit: pF }
+          to: GND
+
+    # ── Debug (SWD) ───────────────────────────────────────────────────────────
+    - number: AC24
+      name: SWDIO
+      direction: bidirectional
+      primary_function:
+        type: swd_io
+      required_external:
+        - type: resistor
+          resistance: { value: 10, unit: kΩ }
+          to: VDD
+
+    - number: AA24
+      name: SWDCLK
+      direction: input
+      primary_function:
+        type: swd_clk
+      required_external:
+        - type: resistor
+          resistance: { value: 10, unit: kΩ }
+          to: GND
+
+    # ── USB ───────────────────────────────────────────────────────────────────
+    - number: AD6
+      name: D+
+      direction: bidirectional
+      primary_function:
+        type: usb_dp
+
+    - number: AD4
+      name: D-
+      direction: bidirectional
+      primary_function:
+        type: usb_dm
+
+    # ── NFC (also P0.09 / P0.10 when used as GPIO) ───────────────────────────
+    - number: L24
+      name: NFC1
+      direction: bidirectional
+      primary_function:
+        type: nfc_antenna
+
+    - number: J24
+      name: NFC2
+      direction: bidirectional
+      primary_function:
+        type: nfc_antenna
+
+    # ── RF antenna ───────────────────────────────────────────────────────────
+    # Requires external matching network. Net name kept as ANT for the circuit.
+    - number: H23
+      name: ANT
+      direction: passive
+      net: ANT
+
+    # ── Reset (P0.18) ─────────────────────────────────────────────────────────
+    # Active-low reset. External pull-up required; optional 100 nF filter cap.
+    - number: AC13
+      name: RESET
+      direction: bidirectional
+      must_connect: true
+      primary_function:
+        type: reset
+        polarity: active_low
+      required_external:
+        - type: resistor
+          resistance: { value: 10, unit: kΩ }
+          to: VDD
+        - type: capacitor
+          capacitance: { value: 100, unit: nF }
+          to: GND
+
+    # ── GPIO Port 0 ───────────────────────────────────────────────────────────
+    # All GPIO pins support: digital I/O, configurable pull-up/pull-down,
+    # drive strength 0.5–15 mA, and flexible peripheral assignment (SPI, I2C,
+    # UART, PWM, PDM, I2S, QDEC, etc.) via the Programmable Peripheral
+    # Interconnect (PPI). Max GPIO frequency: 30 MHz.
+    - number: L1
+      name: P0.06
+      direction: bidirectional
+
+    - number: M2
+      name: P0.07
+      direction: bidirectional   # alt: TRACECLK
+
+    - number: N1
+      name: P0.08
+      direction: bidirectional
+
+    - number: T2
+      name: P0.11
+      direction: bidirectional   # alt: TRACEDATA2
+
+    - number: U1
+      name: P0.12
+      direction: bidirectional   # alt: TRACEDATA1
+
+    - number: AD8
+      name: P0.13
+      direction: bidirectional
+
+    - number: AC9
+      name: P0.14
+      direction: bidirectional
+
+    - number: AD10
+      name: P0.15
+      direction: bidirectional
+
+    - number: AC11
+      name: P0.16
+      direction: bidirectional
+
+    - number: AD12
+      name: P0.17
+      direction: bidirectional
+
+    - number: AC15
+      name: P0.19
+      direction: bidirectional
+
+    - number: AD16
+      name: P0.20
+      direction: bidirectional
+
+    - number: AC17
+      name: P0.21
+      direction: bidirectional
+
+    - number: AD18
+      name: P0.22
+      direction: bidirectional
+
+    - number: AC19
+      name: P0.23
+      direction: bidirectional
+
+    - number: AD20
+      name: P0.24
+      direction: bidirectional
+
+    - number: AC21
+      name: P0.25
+      direction: bidirectional
+
+    - number: G1
+      name: P0.26
+      direction: bidirectional
+
+    - number: H2
+      name: P0.27
+      direction: bidirectional
+
+    # ── ADC inputs (shared with GPIO P0.02–P0.05 and P0.28–P0.31) ────────────
+    - number: A12
+      name: AIN0
+      direction: bidirectional
+      primary_function:
+        type: adc
+
+    - number: B13
+      name: AIN1
+      direction: bidirectional
+      primary_function:
+        type: adc
+
+    - number: J1
+      name: AIN2
+      direction: bidirectional
+      primary_function:
+        type: adc
+
+    - number: K2
+      name: AIN3
+      direction: bidirectional
+      primary_function:
+        type: adc
+
+    - number: B11
+      name: AIN4
+      direction: bidirectional
+      primary_function:
+        type: adc
+
+    - number: A10
+      name: AIN5
+      direction: bidirectional
+      primary_function:
+        type: adc
+
+    - number: B9
+      name: AIN6
+      direction: bidirectional
+      primary_function:
+        type: adc
+
+    - number: A8
+      name: AIN7
+      direction: bidirectional
+      primary_function:
+        type: adc
+
+    # ── GPIO Port 1 ───────────────────────────────────────────────────────────
+    - number: AD22
+      name: P1.00
+      direction: bidirectional   # alt: TRACEDATA0
+
+    - number: Y23
+      name: P1.01
+      direction: bidirectional
+
+    - number: W24
+      name: P1.02
+      direction: bidirectional
+
+    - number: V23
+      name: P1.03
+      direction: bidirectional
+
+    - number: U24
+      name: P1.04
+      direction: bidirectional
+
+    - number: T23
+      name: P1.05
+      direction: bidirectional
+
+    - number: R24
+      name: P1.06
+      direction: bidirectional
+
+    - number: P23
+      name: P1.07
+      direction: bidirectional
+
+    - number: P2
+      name: P1.08
+      direction: bidirectional
+
+    - number: R1
+      name: P1.09
+      direction: bidirectional   # alt: TRACEDATA3
+
+    - number: A20
+      name: P1.10
+      direction: bidirectional
+
+    - number: B19
+      name: P1.11
+      direction: bidirectional
+
+    - number: B17
+      name: P1.12
+      direction: bidirectional
+
+    - number: A16
+      name: P1.13
+      direction: bidirectional
+
+    - number: B15
+      name: P1.14
+      direction: bidirectional
+
+    - number: A14
+      name: P1.15
+      direction: bidirectional
+
+  interfaces:
+    - type: SWD
+      pins:
+        io: SWDIO
+        clk: SWDCLK
+
+    - type: USB
+      speed_max: { value: 12, unit: Mbps }
+      pins:
+        dp: D+
+        dm: D-
+
+    # The following interfaces can be mapped to any GPIO via PPI.
+    # Specify the desired pins in the circuit instance under pin_config.
+    - type: I2C
+      instance: 1
+      speed_max: { value: 400, unit: kHz }
+      pins: {}
+
+    - type: I2C
+      instance: 2
+      speed_max: { value: 400, unit: kHz }
+      pins: {}
+
+    - type: SPI
+      instance: 1
+      speed_max: { value: 32, unit: MHz }
+      pins: {}
+
+    - type: UART
+      instance: 1
+      speed_max: { value: 1, unit: Mbps }
+      pins: {}

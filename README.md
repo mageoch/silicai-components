@@ -1,5 +1,7 @@
 # SilicAI Components
 
+Copyright 2026 mageo services Ltd — Licensed under the [PolyForm Noncommercial License 1.0.0](LICENSE). Commercial use requires a [separate license](https://github.com/mageoch/silicai/blob/main/COMMERCIAL_LICENSE.md).
+
 Community component library for [SilicAI](https://github.com/mageoch/silicai).
 
 ## Structure
