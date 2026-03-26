@@ -1,0 +1,127 @@
+$schema: "https://github.com/mageoch/silicai/schema/component.schema.json"
+$schema_version: "0.1.0"
+
+component:
+  mpn: TMP117AIDRVR
+  manufacturer: Texas Instruments
+  category: sensor
+  package: WSON-6
+  datasheet: "https://www.ti.com/lit/ds/symlink/tmp117.pdf"
+
+  absolute_maximum_ratings:
+    - parameter: supply_voltage
+      pins: ["V+"]
+      max: 6V
+    - parameter: io_voltage
+      pins: [SCL, SDA, ALERT, ADD0]
+      max: 6V
+
+  recommended_operating_conditions:
+    - parameter: supply_voltage
+      pins: ["V+"]
+      min: 1.7V
+      nom: 3.3V
+      max: 5.5V
+
+  rails:
+    - id: vplus
+      net: VCC_3V3
+      per_pin_decoupling:
+        - type: capacitor
+          value: 100nF
+          voltage_rating: 10V
+          dielectric: [X5R, X7R]
+          placement: close
+
+  pins:
+    - number: 1
+      name: SCL
+      direction: input
+      open_drain: true
+      primary_function:
+        type: i2c_scl
+      electrical:
+        v_ih_min: "0.7 * V+"
+        v_il_max: "0.3 * V+"
+      required_external:
+        - type: resistor
+          value: 4.7k
+          from: SCL
+          to: VCC_3V3
+          scope: bus          # one pull-up per bus, not per device
+
+    - number: 2
+      name: GND
+      direction: power_in
+      net: GND                # direct net reference, no rail needed
+
+    - number: 3
+      name: ALERT
+      direction: output
+      open_drain: true
+      primary_function:
+        type: alert
+        polarity: active_low
+      electrical:
+        v_ol_max: 0.4V
+        i_ol_max: 3mA
+      required_external:
+        - type: resistor
+          value: 10k
+          from: ALERT
+          to: VCC_3V3
+          scope: component
+
+    - number: 4
+      name: ADD0
+      direction: input
+      must_connect: true      # must not be left floating
+      primary_function:
+        type: address_select
+        options:
+          - connect_to: GND
+            i2c_address: "0x48"
+          - connect_to: "V+"
+            i2c_address: "0x49"
+          - connect_to: SDA
+            i2c_address: "0x4A"
+          - connect_to: SCL
+            i2c_address: "0x4B"
+      required_external:
+        - type: resistor
+          value: 10k
+          from: ADD0
+          to: GND
+          scope: component
+
+    - number: 5
+      name: "V+"
+      direction: power_in
+      rail: vplus
+
+    - number: 6
+      name: SDA
+      direction: bidirectional
+      open_drain: true
+      primary_function:
+        type: i2c_sda
+      electrical:
+        v_ih_min: "0.7 * V+"
+        v_il_max: "0.3 * V+"
+        v_ol_max: 0.4V
+        i_ol_max: 3mA
+      required_external:
+        - type: resistor
+          value: 4.7k
+          from: SDA
+          to: VCC_3V3
+          scope: bus          # one pull-up per bus, not per device
+
+  interfaces:
+    - type: I2C
+      instance: 1
+      speed_min: 1kHz
+      speed_max: 400kHz
+      pins:
+        scl: SCL
+        sda: SDA

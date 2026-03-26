@@ -1,0 +1,22 @@
+$schema: "https://github.com/mageoch/silicai/schema/component.schema.json"
+$schema_version: "0.1.0"
+
+component:
+  mpn: R_10K_1PCT_100MW_0402
+  manufacturer: generic
+  category: passive
+  package: "0402"
+
+  specifications:
+    resistance: 10kΩ
+    tolerance: "±1%"
+    power_rating: 100mW
+    temperature_coefficient: 100ppm/°C
+
+  pins:
+    - number: 1
+      name: A
+      direction: passive
+    - number: 2
+      name: B
+      direction: passive
