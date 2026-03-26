@@ -8,11 +8,11 @@ component:
   package: "0402"
 
   specifications:
-    capacitance: 100nF
-    tolerance: "±10%"
-    voltage_rating: 10V
+    capacitance:   { value: 100, unit: nF }
+    tolerance:     { value: 10, unit: "%" }
+    voltage_rating: { value: 10, unit: V }
     dielectric: X7R
-    temperature_range: "-55..125°C"
+    temperature_range: { min: -55, max: 125, unit: °C }
 
   pins:
     - number: 1

@@ -8,10 +8,10 @@ component:
   package: "0402"
 
   specifications:
-    resistance: 4.7kΩ
-    tolerance: "±1%"
-    power_rating: 100mW
-    temperature_coefficient: 100ppm/°C
+    resistance:             { value: 4.7, unit: kΩ }
+    tolerance:              { value: 1, unit: "%" }
+    power_rating:           { value: 100, unit: mW }
+    temperature_coefficient: { value: 100, unit: ppm/°C }
 
   pins:
     - number: 1
