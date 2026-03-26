@@ -17,7 +17,7 @@ component:
       min: { value: -55, unit: °C }
       max: { value: 150, unit: °C }
     junction_max:          { value: 125, unit: °C }
-    thermal_resistance_ja: { value: 88.6, unit: °C/W }   # WSON-6
+    thermal_resistance_ja: { value: 88.6, unit: °C/W }
 
   power_consumption:
     - mode: active_conversion
@@ -31,6 +31,31 @@ component:
       current: { value: 0.25, unit: µA }
       current_max: { value: 1, unit: µA }
       conditions: "V+=3.3V, shutdown mode"
+
+  timing:
+    - name: t_su_dat
+      description: "SDA setup time before SCL rising edge"
+      interface: I2C
+      from_pin: SDA
+      to_pin: SCL
+      from_edge: any
+      to_edge: rising
+      min: { value: 250, unit: ns }
+      conditions: "Fast mode (400 kHz)"
+    - name: t_hd_dat
+      description: "SDA hold time after SCL falling edge"
+      interface: I2C
+      from_pin: SCL
+      to_pin: SDA
+      from_edge: falling
+      to_edge: any
+      min: { value: 0, unit: ns }
+      conditions: "Fast mode (400 kHz)"
+    - name: t_conv
+      description: "Temperature conversion time (one-shot or continuous)"
+      min: { value: 15.5, unit: ms }
+      typ: { value: 15.5, unit: ms }
+      conditions: "8 averages (default)"
 
   absolute_maximum_ratings:
     - parameter: supply_voltage
@@ -70,13 +95,6 @@ component:
       electrical:
         v_ih_min: { multiplier: 0.7, reference: "V+" }
         v_il_max: { multiplier: 0.3, reference: "V+" }
-      required_external:
-        - type: resistor
-          resistance: { value: 4.7, unit: kΩ }
-          from: SCL
-          to: VCC_3V3
-          scope: bus
-
     - number: 2
       name: GND
       direction: power_in
@@ -137,13 +155,6 @@ component:
         v_il_max: { multiplier: 0.3, reference: "V+" }
         v_ol_max: { value: 0.4, unit: V }
         i_ol_max: { value: 3, unit: mA }
-      required_external:
-        - type: resistor
-          resistance: { value: 4.7, unit: kΩ }
-          from: SDA
-          to: VCC_3V3
-          scope: bus
-
   interfaces:
     - type: I2C
       instance: 1

@@ -1,0 +1,171 @@
+$schema: "https://github.com/mageoch/silicai/schema/component.schema.json"
+$schema_version: "0.1.0"
+
+component:
+  mpn: RV-3028-C7
+  manufacturer: Micro Crystal
+  category: sensor
+  package: SON-8
+  datasheet: "https://www.microcrystal.com/fileadmin/Media/Products/RTC/App.Manual/RV-3028-C7_App-Manual.pdf"
+  kicad_symbol: "RTC:RV-3028-C7"
+
+  description: "Extreme low power RTC module with integrated XTAL, I2C interface, backup switchover, trickle charger, and 43 bytes user EEPROM. Factory calibrated to ±1 ppm @ 25°C."
+
+  temperature_range:
+    operating:
+      min: { value: -40, unit: °C }
+      max: { value: 85, unit: °C }
+    storage:
+      min: { value: -55, unit: °C }
+      max: { value: 125, unit: °C }
+
+  power_consumption:
+    - mode: timekeeping
+      description: "Timekeeping mode, I2C inactive"
+      rail: vdd
+      current: { value: 45, unit: nA }
+      current_max: { value: 60, unit: nA }
+      conditions: "VDD=3V, I2C-bus inactive"
+
+  absolute_maximum_ratings:
+    - parameter: supply_voltage
+      pins: ["VDD"]
+      unit: V
+      max: 5.5
+    - parameter: backup_supply_voltage
+      pins: ["VBACKUP"]
+      unit: V
+      max: 5.5
+
+  recommended_operating_conditions:
+    - parameter: supply_voltage_timekeeping
+      pins: ["VDD"]
+      unit: V
+      min: 1.1
+      max: 5.5
+      conditions: "Timekeeping"
+    - parameter: supply_voltage_i2c
+      pins: ["VDD"]
+      unit: V
+      min: 1.2
+      max: 5.5
+      conditions: "I2C-bus active"
+
+  rails:
+    - id: vdd
+      net: VCC
+      per_pin_decoupling:
+        - type: capacitor
+          capacitance: { value: 100, unit: nF }
+          voltage_rating: { value: 10, unit: V }
+          dielectric: [X5R, X7R]
+          placement: close
+    - id: vbackup
+      net: VBACKUP
+      description: "Backup supply rail. Connect to coin cell, supercapacitor, or rechargeable cell via trickle charger."
+      per_pin_decoupling:
+        - type: capacitor
+          capacitance: { value: 100, unit: nF }
+          voltage_rating: { value: 10, unit: V }
+          dielectric: [X5R, X7R]
+          placement: close
+
+  pins:
+    - number: 1
+      name: CLKOUT
+      direction: output
+      primary_function:
+        type: clock_out
+      description: "Programmable clock output. Selectable frequencies: 32.768 kHz, 8192 Hz, 1024 Hz, 64 Hz, 32 Hz, 1 Hz. Configurable via EEPROM."
+
+    - number: 2
+      name: "/INT"
+      direction: output
+      open_drain: true
+      primary_function:
+        type: interrupt
+        polarity: active_low
+      description: "Interrupt output, open-drain, active LOW. Triggered by alarm, timer, or periodic time update."
+      required_external:
+        - type: resistor
+          resistance: { value: 10, unit: kΩ }
+          from: "/INT"
+          to: VCC
+          scope: component
+
+    - number: 3
+      name: SCL
+      direction: input
+      primary_function:
+        type: i2c_scl
+      description: "I2C serial clock input, up to 400 kHz."
+      electrical:
+        v_ih_min: { multiplier: 0.7, reference: VDD }
+        v_il_max: { multiplier: 0.3, reference: VDD }
+      required_external:
+        - type: resistor
+          resistance: { value: 4.7, unit: kΩ }
+          from: SCL
+          to: VCC
+          scope: bus
+
+    - number: 4
+      name: SDA
+      direction: bidirectional
+      open_drain: true
+      primary_function:
+        type: i2c_sda
+      description: "I2C serial data, bidirectional open-drain. Fixed 7-bit address 0x52."
+      electrical:
+        v_ih_min: { multiplier: 0.7, reference: VDD }
+        v_il_max: { multiplier: 0.3, reference: VDD }
+      required_external:
+        - type: resistor
+          resistance: { value: 4.7, unit: kΩ }
+          from: SDA
+          to: VCC
+          scope: bus
+
+    - number: 5
+      name: VSS
+      direction: power_in
+      net: GND
+      description: "Ground. Metal lid is also connected to VSS."
+
+    - number: 6
+      name: VBACKUP
+      direction: power_in
+      rail: vbackup
+      description: "Backup supply voltage. Supports automatic switchover from VDD. Connect to coin cell or supercapacitor. Trickle charger available for rechargeable backup sources."
+
+    - number: 7
+      name: VDD
+      direction: power_in
+      rail: vdd
+      description: "Main power supply, 1.1V to 5.5V (timekeeping), 1.2V to 5.5V (I2C active)."
+
+    - number: 8
+      name: EVI
+      direction: input
+      primary_function:
+        type: gpio
+      description: "External event input with timestamp function. Edge-sensitive; captures time of external event into timestamp registers."
+
+  interfaces:
+    - type: I2C
+      instance: 1
+      speed_max: { value: 400, unit: kHz }
+      address: "0x52"
+      pins:
+        scl: SCL
+        sda: SDA
+
+  notes:
+    - "Integrated XTAL — no external crystal required. Factory calibrated ±1 ppm @ 25°C."
+    - "I2C fixed 7-bit address: 0x52."
+    - "Metal lid is connected to VSS (pin 5); ensure PCB pad is connected to GND."
+    - "VBACKUP supports automatic switchover; connect to coin cell (e.g. CR2032) or supercapacitor."
+    - "Trickle charger for VBACKUP is user-programmable via EEPROM."
+    - "43 bytes of non-volatile user EEPROM plus 2 bytes user RAM."
+    - "Package: SON-8 (DFN-8), 3.2 x 1.5 x 0.8 mm, Au flashed pads, reflow 260°C."
+    - "Time accuracy aging: ±3 ppm first year @ 25°C."

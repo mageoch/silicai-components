@@ -1,0 +1,348 @@
+$schema: "https://github.com/mageoch/silicai/schema/component.schema.json"
+$schema_version: "0.1.0"
+
+component:
+  mpn: SLB9670VQ20
+  manufacturer: Infineon Technologies
+  category: logic
+  package: PG-VQFN-32-13
+  datasheet: "https://www.infineon.com/dgdl/infineon-slb-9670vq2.0-datasheet-en.pdf"
+  description: "OPTIGA TPM SLB 9670 TPM2.0 — Trusted Platform Module, SPI interface, FIPS 140-2 Level 2, CC EAL4+, standard temperature range (-20..+85°C)"
+
+  temperature_range:
+    operating:
+      min: { value: -20, unit: °C }
+      max: { value: 85, unit: °C }
+    storage:
+      min: { value: -40, unit: °C }
+      max: { value: 125, unit: °C }
+
+  absolute_maximum_ratings:
+    - parameter: supply_voltage
+      pins: ["VDD"]
+      unit: V
+      min: -0.3
+      max: 5.0
+    - parameter: voltage_on_any_pin
+      pins: []
+      unit: V
+      min: -0.3
+      max: 5.0
+      remark: "General; VDD+0.3 max relative limit"
+    - parameter: voltage_spi_pins
+      pins: ["MISO", "MOSI", "SCLK", "CS#"]
+      unit: V
+      min: -0.5
+      max: 3.965
+      remark: "VDD = 3.3V ±10%; max = VDD+0.5"
+    - parameter: ambient_temperature_standard
+      pins: []
+      unit: °C
+      min: -20
+      max: 85
+      remark: "Standard temperature devices"
+    - parameter: storage_temperature
+      pins: []
+      unit: °C
+      min: -40
+      max: 125
+    - parameter: esd_hbm
+      pins: []
+      unit: V
+      max: 2000
+      remark: "HBM 1.5 kΩ, 100 pF; EIA/JESD22-A114-B"
+    - parameter: esd_cdm
+      pins: []
+      unit: V
+      max: 500
+      remark: "CDM; ESD Association Standard STM5.3.1-1999"
+    - parameter: latchup_immunity
+      pins: []
+      unit: mA
+      max: 100
+      remark: "According to EIA/JESD78"
+
+  recommended_operating_conditions:
+    - parameter: supply_voltage_3v3
+      pins: ["VDD"]
+      unit: V
+      min: 3.0
+      nom: 3.3
+      max: 3.6
+    - parameter: supply_voltage_1v8
+      pins: ["VDD"]
+      unit: V
+      min: 1.65
+      nom: 1.8
+      max: 1.95
+    - parameter: operating_temperature
+      pins: []
+      unit: °C
+      min: -20
+      max: 85
+      remark: "Standard temperature devices"
+    - parameter: sclk_frequency
+      pins: ["SCLK"]
+      unit: MHz
+      max: 43
+      remark: "VDD_typ = 3.3V, t_SLEW ≥ 1V/ns"
+
+  power_consumption:
+    - mode: active
+      description: "Active mode, SPI transaction ongoing"
+      rail: vdd
+      current: { value: 25, unit: mA }
+      conditions: "VDD = 3.3V; max value"
+    - mode: sleep
+      description: "Sleep/low-power mode, no active transaction"
+      rail: vdd
+      current: { value: 110, unit: µA }
+      conditions: "Pin PP = GND, GPIO/RST#/PIRQ# = VDD, CS# inactive (= VDD), MOSI/MISO/SCLK don't care"
+
+  rails:
+    - id: vdd
+      net: VDD_3V3
+      per_pin_decoupling:
+        - type: capacitor
+          capacitance: { value: 100, unit: nF }
+          voltage_rating: { value: 10, unit: V }
+          dielectric: [X5R, X7R]
+          placement: close
+          remark: "Place 2x 100 nF capacitors close to each VDD/GND pin pair"
+      bulk_decoupling:
+        - type: capacitor
+          capacitance: { value: 1, unit: µF }
+          voltage_rating: { value: 10, unit: V }
+          dielectric: [X5R, X7R]
+          placement: nearby
+
+  pins:
+    - number: 1
+      name: "NCI/VDD"
+      direction: no_connect
+      remark: "Not connected internally. TCG spec defines as VDD; connect VDD for full compliance."
+
+    - number: 2
+      name: "GND"
+      direction: power_in
+      must_connect: true
+      net: GND
+
+    - number: 3
+      name: "NCI"
+      direction: no_connect
+
+    - number: 4
+      name: "NCI"
+      direction: no_connect
+
+    - number: 5
+      name: "NCI"
+      direction: no_connect
+
+    - number: 6
+      name: "GPIO"
+      direction: bidirectional
+      must_connect: false
+      primary_function:
+        type: gpio
+      remark: "GPIO-Express-00 signal. TPM2.0 does not use this; may be left unconnected. Has internal pull-up resistor."
+      electrical:
+        v_ih_min: { multiplier: 0.7, reference: VDD }
+        v_il_max: { multiplier: 0.2, reference: VDD }
+        v_oh_min: { multiplier: 0.7, reference: VDD }
+        v_ol_max: { value: 0.3, unit: V }
+
+    - number: 7
+      name: "PP"
+      direction: input
+      must_connect: false
+      primary_function:
+        type: gpio
+      remark: "Physical Presence pin. TPM2.0 does not use this; may be left unconnected. Has internal pull-down resistor."
+      electrical:
+        v_ih_min: { multiplier: 0.7, reference: VDD }
+        v_il_max: { multiplier: 0.2, reference: VDD }
+
+    - number: 8
+      name: "VDD"
+      direction: power_in
+      must_connect: true
+      rail: vdd
+
+    - number: 9
+      name: "GND"
+      direction: power_in
+      must_connect: true
+      net: GND
+
+    - number: 10
+      name: "NCI"
+      direction: no_connect
+
+    - number: 11
+      name: "NCI"
+      direction: no_connect
+
+    - number: 12
+      name: "NCI"
+      direction: no_connect
+
+    - number: 13
+      name: "NCI"
+      direction: no_connect
+
+    - number: 14
+      name: "NCI/VDD"
+      direction: no_connect
+      remark: "Not connected internally. TCG spec defines as VDD; connect VDD for compliance and upward compatibility."
+
+    - number: 15
+      name: "NCI"
+      direction: no_connect
+
+    - number: 16
+      name: "NCI/GND"
+      direction: no_connect
+      remark: "Not connected internally. TCG spec defines as GND; connect GND for compliance."
+
+    - number: 17
+      name: "RST#"
+      direction: input
+      must_connect: true
+      primary_function:
+        type: reset
+        polarity: active_low
+      remark: "External reset, active low. Typically driven by host PCIRST#. Has weak internal pull-up resistor."
+      electrical:
+        v_ih_min: { multiplier: 0.7, reference: VDD }
+        v_il_max: { multiplier: 0.3, reference: VDD }
+
+    - number: 18
+      name: "PIRQ#"
+      direction: output
+      open_drain: true
+      must_connect: false
+      primary_function:
+        type: interrupt
+        polarity: active_low
+      remark: "Interrupt request to host, active low, open-drain. No internal pull-up; requires external pull-up resistor."
+      electrical:
+        v_oh_min: { multiplier: 0.9, reference: VDD }
+        v_ol_max: { value: 0.33, unit: V }
+      required_external:
+        - type: resistor
+          resistance: { value: 10, unit: kΩ }
+          from: PIRQ#
+          to: VDD_3V3
+          scope: component
+
+    - number: 19
+      name: "SCLK"
+      direction: input
+      must_connect: true
+      primary_function:
+        type: spi_sck
+      remark: "SPI clock input. Only SPI mode 0 is supported. Schmitt-trigger input."
+      electrical:
+        v_ih_min: { multiplier: 0.7, reference: VDD }
+        v_il_max: { multiplier: 0.3, reference: VDD }
+
+    - number: 20
+      name: "CS#"
+      direction: input
+      must_connect: true
+      primary_function:
+        type: spi_cs
+        polarity: active_low
+      remark: "SPI chip select, active low. Schmitt-trigger input."
+      electrical:
+        v_ih_min: { multiplier: 0.7, reference: VDD }
+        v_il_max: { multiplier: 0.3, reference: VDD }
+
+    - number: 21
+      name: "MOSI"
+      direction: input
+      must_connect: true
+      primary_function:
+        type: spi_mosi
+      remark: "SPI data input from master. Schmitt-trigger input."
+      electrical:
+        v_ih_min: { multiplier: 0.7, reference: VDD }
+        v_il_max: { multiplier: 0.3, reference: VDD }
+
+    - number: 22
+      name: "VDD"
+      direction: power_in
+      must_connect: true
+      rail: vdd
+
+    - number: 23
+      name: "GND"
+      direction: power_in
+      must_connect: true
+      net: GND
+
+    - number: 24
+      name: "MISO"
+      direction: output
+      must_connect: true
+      primary_function:
+        type: spi_miso
+      remark: "SPI data output to master. Tri-state output."
+      electrical:
+        v_oh_min: { multiplier: 0.9, reference: VDD }
+        v_ol_max: { value: 0.33, unit: V }
+
+    - number: 25
+      name: "NCI"
+      direction: no_connect
+
+    - number: 26
+      name: "NCI"
+      direction: no_connect
+
+    - number: 27
+      name: "NCI"
+      direction: no_connect
+
+    - number: 28
+      name: "NCI"
+      direction: no_connect
+
+    - number: 29
+      name: "NC"
+      direction: no_connect
+      remark: "Must be left floating. Do not connect externally."
+
+    - number: 30
+      name: "NC"
+      direction: no_connect
+      remark: "Must be left floating. Do not connect externally."
+
+    - number: 31
+      name: "NCI"
+      direction: no_connect
+
+    - number: 32
+      name: "GND"
+      direction: power_in
+      must_connect: true
+      net: GND
+
+    - number: 33
+      name: "EP"
+      direction: power_in
+      must_connect: true
+      net: GND
+      remark: "Exposed thermal/ground pad. Internally connected to GND; must also be connected to GND externally."
+
+  interfaces:
+    - type: SPI
+      instance: 1
+      speed_max: { value: 43, unit: MHz }
+      pins:
+        sck: "SCLK"
+        mosi: "MOSI"
+        miso: "MISO"
+        cs: "CS#"

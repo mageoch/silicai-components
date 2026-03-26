@@ -1,0 +1,126 @@
+$schema: "https://github.com/mageoch/silicai/schema/component.schema.json"
+$schema_version: "0.1.0"
+
+component:
+  mpn: HR911060C
+  manufacturer: HanRun Electronics
+  category: connector
+  package: RJ45-THT-17pin
+  datasheet: "http://www.hanrun.com"
+
+  description: >
+    Low profile 1x1 port Tab-UP RJ45 connector with integrated magnetics and
+    tri-colour LED for 10/100/1000Base-T applications. Internal 1CT:1CT
+    transformer ratio on all four pairs. 2250VDC isolation (UTP side to chip
+    side). Meets IEEE 802.3ab. UL Recognised Component File #E330599.
+    LEDs: Yellow (right), Green/Orange (left).
+
+  temperature_range:
+    operating:
+      min: { value: 0, unit: "°C" }
+      max: { value: 70, unit: "°C" }
+    storage:
+      min: { value: -40, unit: "°C" }
+      max: { value: 85, unit: "°C" }
+
+  absolute_maximum_ratings:
+    - parameter: isolation_voltage
+      pins: []
+      unit: VDC
+      max: 2250
+      conditions: "UTP side to chip side, 0.5mA 60sec"
+    - parameter: led_forward_current
+      pins: ["13", "14", "15", "16", "17"]
+      unit: mA
+      max: 20
+
+  pins:
+    - number: 10
+      name: TRD1-
+      direction: passive
+      description: "Pair 1 negative, chip side"
+
+    - number: 11
+      name: TRD1+
+      direction: passive
+      description: "Pair 1 positive, chip side"
+
+    - number: 12
+      name: TRCT1
+      direction: passive
+      description: "Pair 1 centre tap, chip side"
+
+    - number: 5
+      name: TRD2-
+      direction: passive
+      description: "Pair 2 negative, chip side"
+
+    - number: 4
+      name: TRD2+
+      direction: passive
+      description: "Pair 2 positive, chip side"
+
+    - number: 6
+      name: TRCT2
+      direction: passive
+      description: "Pair 2 centre tap, chip side"
+
+    - number: 2
+      name: TRD3-
+      direction: passive
+      description: "Pair 3 negative, chip side"
+
+    - number: 3
+      name: TRD3+
+      direction: passive
+      description: "Pair 3 positive, chip side"
+
+    - number: 1
+      name: TRCT3
+      direction: passive
+      description: "Pair 3 centre tap, chip side"
+
+    - number: 9
+      name: TRD4-
+      direction: passive
+      description: "Pair 4 negative, chip side"
+
+    - number: 8
+      name: TRD4+
+      direction: passive
+      description: "Pair 4 positive, chip side"
+
+    - number: 7
+      name: TRCT4
+      direction: passive
+      description: "Pair 4 centre tap, chip side"
+
+    - number: SHIELD
+      name: SHIELD
+      direction: passive
+      description: "Chassis shield ground. Connect to PCB shield plane or earth."
+
+    - number: 13
+      name: LED_YEL_A
+      direction: passive
+      description: "Yellow LED anode (right LED)"
+
+    - number: 14
+      name: LED_YEL_K
+      direction: passive
+      description: "Yellow LED cathode (right LED)"
+
+    - number: 15
+      name: LED_ORG_A
+      direction: passive
+      description: "Orange LED anode (left LED)"
+
+    - number: 16
+      name: LED_GRN_K
+      direction: passive
+      description: "Green/Orange LED cathode (left LED, shared)"
+
+    - number: 17
+      name: LED_GRN_A
+      direction: passive
+      description: "Green LED anode (left LED)"

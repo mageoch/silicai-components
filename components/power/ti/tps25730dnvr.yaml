@@ -1,0 +1,538 @@
+$schema: "https://github.com/mageoch/silicai/schema/component.schema.json"
+$schema_version: "0.1.0"
+
+component:
+  mpn: TPS25730DNVR
+  manufacturer: Texas Instruments
+  category: power_ic
+  package: QFN-38
+  datasheet: "https://www.ti.com/lit/ds/symlink/tps25730.pdf"
+
+  description: >
+    USB Type-C and USB PD3.1 controller with integrated power switches optimized
+    for sink-only power applications. Features integrated high-voltage PPHV sink
+    load switch, overvoltage/reverse-current protection, VBUS 3.3-V LDO for dead
+    battery, I2C interface, and 6 GPIO configuration functions. No external EEPROM
+    or MCU required for basic operation.
+
+  temperature_range:
+    operating:
+      min: { value: -40, unit: °C }
+      max: { value: 125, unit: °C }
+    storage:
+      min: { value: -55, unit: °C }
+      max: { value: 150, unit: °C }
+    junction_max: { value: 175, unit: °C }
+    thermal_resistance_ja: { value: 57.4, unit: °C/W }
+
+  power_consumption:
+    - mode: active_sink
+      description: "Active Sink mode — negotiating/sinking power from USB PD source"
+      rail: vin_3v3
+      current: { value: 3, unit: mA }
+      current_max: { value: 6, unit: mA }
+      conditions: "22V >= VBUS >= 4.0V, VIN_3V3=3.3V, no GPIO loading"
+    - mode: idle_sink
+      description: "Idle Sink mode — connected but not actively sinking"
+      rail: vin_3v3
+      current: { value: 1.0, unit: mA }
+      conditions: "22V >= VBUS >= 4.0V, VIN_3V3=3.3V, no GPIO loading"
+    - mode: sleep
+      description: "Sleep mode — VBUS absent"
+      rail: vin_3v3
+      current: { value: 56, unit: µA }
+      conditions: "VBUS=0V, VIN_3V3=3.3V"
+
+  absolute_maximum_ratings:
+    - parameter: vin_3v3_voltage
+      pins: [VIN_3V3]
+      unit: V
+      min: -0.3
+      max: 4.0
+    - parameter: adcinx_voltage
+      pins: [ADCIN1, ADCIN2, ADCIN3, ADCIN4]
+      unit: V
+      min: -0.3
+      max: 4.0
+    - parameter: vbus_in_vbus_voltage
+      pins: [VBUS_IN, VBUS]
+      unit: V
+      min: -0.3
+      max: 28
+    - parameter: cc_pins_voltage
+      pins: [CC1, CC2]
+      unit: V
+      min: -0.5
+      max: 26
+    - parameter: gpio_voltage
+      pins: []
+      unit: V
+      min: -0.3
+      max: 6.0
+    - parameter: i2c_pins_voltage
+      pins: [I2Ct_SCL, I2Ct_SDA]
+      unit: V
+      min: -0.3
+      max: 4.0
+    - parameter: ldo_1v5_voltage
+      pins: [LDO_1V5]
+      unit: V
+      min: -0.3
+      max: 2.0
+    - parameter: ldo_3v3_voltage
+      pins: [LDO_3V3]
+      unit: V
+      min: -0.3
+      max: 4.0
+    - parameter: pphv_voltage
+      pins: [PPHV]
+      unit: V
+      min: -0.3
+      max: 28
+    - parameter: pphv_source_to_source_voltage
+      pins: []
+      unit: V
+      max: 28
+    - parameter: continuous_sink_current_vbus_in_to_pphv
+      pins: [VBUS_IN, PPHV]
+      unit: A
+      max: 7
+    - parameter: pulsed_sink_current_vbus_in_to_pphv
+      pins: [VBUS_IN, PPHV]
+      unit: A
+      max: 10
+    - parameter: junction_temperature
+      pins: []
+      unit: °C
+      min: -40
+      max: 175
+    - parameter: storage_temperature
+      pins: []
+      unit: °C
+      min: -55
+      max: 150
+
+  recommended_operating_conditions:
+    - parameter: vin_3v3_voltage
+      pins: [VIN_3V3]
+      unit: V
+      min: 3.0
+      max: 3.6
+    - parameter: vbus_in_vbus_voltage
+      pins: [VBUS_IN, VBUS]
+      unit: V
+      min: 4
+      max: 22
+    - parameter: pphv_voltage
+      pins: [PPHV]
+      unit: V
+      min: 0
+      max: 22
+    - parameter: i2c_sda_scl_adcinx_voltage
+      pins: [I2Ct_SDA, I2Ct_SCL]
+      unit: V
+      min: 0
+      max: 3.6
+    - parameter: gpio_voltage
+      pins: []
+      unit: V
+      min: 0
+      max: 5.5
+    - parameter: cc_pins_voltage
+      pins: [CC1, CC2]
+      unit: V
+      min: 0
+      max: 5.5
+    - parameter: current_vbus_in_to_pphv
+      pins: [VBUS_IN, PPHV]
+      unit: A
+      max: 7
+    - parameter: ambient_temperature_high_current
+      pins: []
+      unit: °C
+      min: -40
+      max: 45
+    - parameter: ambient_temperature_low_current
+      pins: []
+      unit: °C
+      min: -40
+      max: 65
+    - parameter: junction_temperature
+      pins: []
+      unit: °C
+      min: -40
+      max: 125
+
+  rails:
+    - id: vin_3v3
+      net: VIN_3V3
+      per_pin_decoupling:
+        - type: capacitor
+          capacitance: { value: 10, unit: µF }
+          voltage_rating: { value: 6.3, unit: V }
+          dielectric: [X5R, X7R]
+          placement: close
+          note: "Recommended 5–10 µF on VIN_3V3. Use derating: if 50% at voltage, double the value."
+
+    - id: ldo_3v3
+      net: LDO_3V3
+      per_pin_decoupling:
+        - type: capacitor
+          capacitance: { value: 10, unit: µF }
+          voltage_rating: { value: 6.3, unit: V }
+          dielectric: [X5R, X7R]
+          placement: close
+          note: "Recommended 5–25 µF on LDO_3V3."
+
+    - id: ldo_1v5
+      net: LDO_1V5
+      per_pin_decoupling:
+        - type: capacitor
+          capacitance: { value: 10, unit: µF }
+          voltage_rating: { value: 4, unit: V }
+          dielectric: [X5R, X7R]
+          placement: close
+          note: "Recommended 4.5–12 µF on LDO_1V5. Internal use only — do not load externally."
+
+    - id: vbus
+      net: VBUS
+      per_pin_decoupling:
+        - type: capacitor
+          capacitance: { value: 4.7, unit: µF }
+          voltage_rating: { value: 25, unit: V }
+          dielectric: [X5R, X7R]
+          placement: close
+          note: "Recommended 1–10 µF on VBUS. All VBUS and VBUS_IN pins must be shorted together."
+
+    - id: pphv
+      net: PPHV
+      per_pin_decoupling:
+        - type: capacitor
+          capacitance: { value: 47, unit: µF }
+          voltage_rating: { value: 25, unit: V }
+          dielectric: [X5R, X7R]
+          placement: close
+          note: "Recommended 47–100 µF bulk capacitance on PPHV (sink from VBUS). USB PD cSnkBulkPd max 100 µF."
+
+  pins:
+    - number: 38
+      name: VIN_3V3
+      direction: power_in
+      must_connect: true
+      rail: vin_3v3
+      description: >
+        Supply for core circuitry and I/O. Bypass with capacitance C_VIN_3V3 to GND.
+        Operating range 3.0–3.6 V.
+
+    - number: 1
+      name: LDO_3V3
+      direction: power_out
+      rail: ldo_3v3
+      description: >
+        Output of supply switched from VIN_3V3 or VBUS LDO. Bypass with capacitance
+        C_LDO_3V3 to GND. Typical 3.4 V. Cannot drive heavy external loads.
+
+    - number: 4
+      name: LDO_1V5
+      direction: power_out
+      rail: ldo_1v5
+      description: >
+        Output of the core LDO. Bypass with capacitance C_LDO_1V5 to GND.
+        This pin cannot source current to external circuits.
+
+    - number: 23
+      name: VBUS_IN_A
+      direction: power_in
+      rail: vbus
+      description: "5 V to 20 V VBUS input. All VBUS_IN pins must be shorted together on the PCB."
+
+    - number: 24
+      name: VBUS_IN_B
+      direction: power_in
+      rail: vbus
+      description: "5 V to 20 V VBUS input. All VBUS_IN pins must be shorted together on the PCB."
+
+    - number: 25
+      name: VBUS_IN_C
+      direction: power_in
+      rail: vbus
+      description: "5 V to 20 V VBUS input. All VBUS_IN pins must be shorted together on the PCB."
+
+    - number: 32
+      name: VBUS_A
+      direction: power_in
+      rail: vbus
+      description: "VBUS input to LDO. Bypass with capacitance C_VBUS to GND."
+
+    - number: 33
+      name: VBUS_B
+      direction: power_in
+      rail: vbus
+      description: "VBUS input to LDO. Bypass with capacitance C_VBUS to GND."
+
+    - number: 20
+      name: PPHV_A
+      direction: power_out
+      description: >
+        High-voltage sinking node. Output of the integrated PPHV FET switch from VBUS_IN.
+        Connect bulk output capacitor (47–100 µF, 25 V) to GND. All PPHV pins must be shorted.
+      remark: "R_ON_typ=16mΩ at TJ=25°C, IPPHV=6.5A"
+      electrical:
+        r_on_typ: { value: 16, unit: mΩ }
+        i_continuous_max: { value: 7, unit: A }
+
+    - number: 21
+      name: PPHV_B
+      direction: power_out
+      description: "High-voltage sinking node — see PPHV_A."
+
+    - number: 22
+      name: PPHV_C
+      direction: power_out
+      description: "High-voltage sinking node — see PPHV_A."
+
+    - number: 15
+      name: DRAIN_A
+      direction: passive
+      description: "Connects to drain of internal PPHV FET. Connect to thermal pad or ground copper pour for heat dissipation."
+
+    - number: 30
+      name: DRAIN_B
+      direction: passive
+      description: "Connects to drain of internal PPHV FET. Connect to thermal pad or ground copper pour for heat dissipation."
+
+    - number: 28
+      name: CC1
+      direction: bidirectional
+      primary_function:
+        type: analog_in
+      description: >
+        CC1 I/O for USB Type-C. Filter noise with recommended capacitor (200–480 pF) to GND.
+        Used for cable attach detection, orientation, and USB PD BMC communication.
+      required_external:
+        - type: capacitor
+          capacitance: { value: 400, unit: pF }
+          from: CC1
+          to: GND
+          scope: component
+          note: "Recommended 400 pF (min 200 pF, max 480 pF) to GND per USB PD spec."
+
+    - number: 29
+      name: CC2
+      direction: bidirectional
+      primary_function:
+        type: analog_in
+      description: >
+        CC2 I/O for USB Type-C. Filter noise with recommended capacitor (200–480 pF) to GND.
+        Used for cable attach detection, orientation, and USB PD BMC communication.
+      required_external:
+        - type: capacitor
+          capacitance: { value: 400, unit: pF }
+          from: CC2
+          to: GND
+          scope: component
+          note: "Recommended 400 pF (min 200 pF, max 480 pF) to GND per USB PD spec."
+
+    - number: 9
+      name: I2Ct_SCL
+      direction: input
+      primary_function:
+        type: i2c_scl
+      description: >
+        I2C target serial clock input. Tie to pullup voltage through a resistor.
+        May be grounded if unused. Supports standard (100 kHz), fast (400 kHz),
+        and fast-plus (800 kHz) modes.
+      required_external:
+        - type: resistor
+          resistance: { value: 4.7, unit: kΩ }
+          from: I2Ct_SCL
+          to: LDO_3V3
+          scope: bus
+
+    - number: 8
+      name: I2Ct_SDA
+      direction: bidirectional
+      open_drain: true
+      primary_function:
+        type: i2c_sda
+      description: >
+        I2C target serial data open-drain input/output. Tie to pullup voltage through a
+        resistor. May be grounded if unused.
+      required_external:
+        - type: resistor
+          resistance: { value: 4.7, unit: kΩ }
+          from: I2Ct_SDA
+          to: LDO_3V3
+          scope: bus
+
+    - number: 2
+      name: ADCIN1
+      direction: input
+      primary_function:
+        type: adc
+      description: >
+        Configuration Input. Connect to a resistor divider to LDO_3V3 for pin-strap
+        configuration. Hi-Z at reset.
+
+    - number: 3
+      name: ADCIN2
+      direction: input
+      primary_function:
+        type: adc
+      description: >
+        Configuration Input. Connect to a resistor divider to LDO_3V3 for pin-strap
+        configuration. Hi-Z at reset.
+
+    - number: 5
+      name: ADCIN3
+      direction: input
+      primary_function:
+        type: adc
+      description: >
+        Configuration Input. Connect to a resistor divider to LDO_3V3 for pin-strap
+        configuration. Hi-Z at reset.
+
+    - number: 7
+      name: ADCIN4
+      direction: input
+      primary_function:
+        type: adc
+      description: >
+        Configuration Input. Connect to a resistor divider to LDO_3V3 for pin-strap
+        configuration. Hi-Z at reset.
+
+    - number: 6
+      name: CAP_MIS
+      direction: output
+      open_drain: true
+      primary_function:
+        type: gpio
+      description: >
+        Open-drain output. Capability Mismatch indicator.
+        Logic 1 (toggling): Capability Mismatch in negotiated PD contract.
+        Logic 0: No Capability Mismatch in negotiated PD contract.
+
+    - number: 19
+      name: SINK_EN
+      direction: output
+      open_drain: true
+      primary_function:
+        type: enable
+        polarity: active_low
+      description: >
+        Open-drain output. Sink path enabled indicator; may be used to control an
+        external load switch. 0: Sink Path Enabled, 1: Sink Path Disabled. Hi-Z at reset.
+
+    - number: 37
+      name: PLUG_EVENT
+      direction: output
+      open_drain: true
+      primary_function:
+        type: gpio
+      description: >
+        Open-drain output. Connection present indicator.
+        1: Connection Present, 0: No Connection Present. Hi-Z at reset.
+
+    - number: 10
+      name: DBG_ACC
+      direction: output
+      open_drain: true
+      primary_function:
+        type: gpio
+      description: >
+        Open-drain output. Debug Accessory attached indicator.
+        1: Debug Accessory Present (Rp/Rp or Rd/Rd), 0: No Debug Accessory Present.
+
+    - number: 13
+      name: PLUG_FLIP
+      direction: output
+      open_drain: true
+      primary_function:
+        type: gpio
+      description: >
+        Open-drain output. Cable plug orientation indicator.
+        1: CC2 connected (upside-down), 0: CC1 connected (upside-up).
+
+    - number: 18
+      name: FAULT_IN
+      direction: input
+      primary_function:
+        type: interrupt
+        polarity: active_low
+      description: >
+        Fault input to disconnect from the port. When powered from VBUS, causes
+        the PD controller to lose power when VBUS is removed.
+        0: Disconnect from port, 1: Maintain connection — no fault.
+
+    - number: 11
+      name: GND_A
+      direction: power_in
+      net: GND
+      description: "Ground. Connect to ground plane."
+
+    - number: 12
+      name: GND_B
+      direction: power_in
+      net: GND
+      description: "Ground. Connect to ground plane."
+
+    - number: 14
+      name: GND_C
+      direction: power_in
+      net: GND
+      description: "Ground. Connect to ground plane."
+
+    - number: 16
+      name: GND_D
+      direction: power_in
+      net: GND
+      description: "Ground. Connect to ground plane."
+
+    - number: 17
+      name: GND_E
+      direction: power_in
+      net: GND
+      description: "Ground. Connect to ground plane."
+
+    - number: 31
+      name: GND_F
+      direction: power_in
+      net: GND
+      description: "Ground. Connect to ground plane."
+
+    - number: 34
+      name: GND_G
+      direction: power_in
+      net: GND
+      description: "Ground. Connect to ground plane."
+
+    - number: 35
+      name: GND_H
+      direction: power_in
+      net: GND
+      description: "Ground. Connect to ground plane."
+
+    - number: 26
+      name: RESERVED_A
+      direction: no_connect
+      description: "Reserved. Tie to ground or LDO_3V3."
+
+    - number: 27
+      name: RESERVED_B
+      direction: no_connect
+      description: "Reserved. Tie to ground or LDO_3V3."
+
+    - number: 36
+      name: RESERVED_C
+      direction: no_connect
+      description: "Reserved. Tie to ground or LDO_3V3."
+
+  interfaces:
+    - type: I2C
+      instance: 1
+      role: target
+      speed_max: { value: 800, unit: kHz }
+      pins:
+        scl: I2Ct_SCL
+        sda: I2Ct_SDA
+      note: "I2C target (slave) interface for external MCU configuration and monitoring. Optional — device works standalone via pin strapping."

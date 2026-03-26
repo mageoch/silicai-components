@@ -25,7 +25,8 @@ component:
     - parameter: gpio_voltage
       pins: [AIN0, AIN1, AIN2, AIN3, AIN4, AIN5, AIN6, AIN7, P0.06, P0.07, P0.08]
       unit: V
-      max: 3.6   # Assumes VDDH = VDD; rises to 5.5V when VDDH > 3.6V
+      max: 3.6
+      remark: "Assumes VDDH = VDD; rises to 5.5V when VDDH > 3.6V"
 
   recommended_operating_conditions:
     - parameter: vdd_voltage
@@ -55,7 +56,7 @@ component:
       min: { value: -40, unit: °C }
       max: { value: 150, unit: °C }
     junction_max:       { value: 85, unit: °C }
-    thermal_resistance_ja: { value: 30, unit: °C/W }   # WLCSP-94, still air
+    thermal_resistance_ja: { value: 30, unit: °C/W }
 
   power_consumption:
     - mode: active_ble_tx
@@ -111,7 +112,6 @@ component:
           placement: close
 
   pins:
-    # ── Power supply ──────────────────────────────────────────────────────────
     - number: B1
       name: VDD
       direction: power_in
@@ -162,27 +162,22 @@ component:
       direction: power_in
       net: GND
 
-    # ── DC-DC converter ───────────────────────────────────────────────────────
-    # DCC/DCCH are the output of the internal DC-DC regulator.
-    # In DC-DC mode: place a 10 μH inductor between DEC1 and VDD input.
-    # In LDO mode: connect DCC/DCCH to VDD; no inductor needed.
     - number: B3
       name: DCC
       direction: power_out
       net: DCC
+      remark: "Output of internal DC-DC regulator. In DC-DC mode: place a 10 µH inductor between DEC1 and VDD input. In LDO mode: connect DCC/DCCH to VDD; no inductor needed."
 
     - number: AB2
       name: DCCH
       direction: power_out
       net: DCCH
 
-    # ── Internal regulator decoupling nodes ───────────────────────────────────
-    # Each DECx pin is an internal LDO/regulator output node that requires
-    # a bypass capacitor to GND, placed as close as possible to the ball.
     - number: C1
       name: DEC1
       direction: passive
       net: DEC1
+      remark: "Internal LDO/regulator output node; bypass capacitor must be placed as close as possible to the ball."
       required_external:
         - type: capacitor
           capacitance: { value: 100, unit: nF }
@@ -253,12 +248,11 @@ component:
           to: GND
           placement: close
 
-    # ── 32 MHz crystal (P0.00/P0.01 when used as GPIO) ───────────────────────
-    # Crystal: place between XL1 and XL2; 12 pF load caps to GND on each pin.
     - number: D2
       name: XL1
       direction: passive
       net: XL1
+      remark: "32 MHz crystal: place between XL1 and XL2 with 12 pF load capacitors to GND on each pin."
       required_external:
         - type: capacitor
           capacitance: { value: 12, unit: pF }
@@ -273,12 +267,11 @@ component:
           capacitance: { value: 12, unit: pF }
           to: GND
 
-    # ── 32.768 kHz crystal ────────────────────────────────────────────────────
-    # Crystal: place between XC1 and XC2; 12 pF load caps to GND on each pin.
     - number: B24
       name: XC1
       direction: input
       net: XC1
+      remark: "32.768 kHz crystal: place between XC1 and XC2 with 12 pF load capacitors to GND on each pin."
       required_external:
         - type: capacitor
           capacitance: { value: 12, unit: pF }
@@ -293,7 +286,6 @@ component:
           capacitance: { value: 12, unit: pF }
           to: GND
 
-    # ── Debug (SWD) ───────────────────────────────────────────────────────────
     - number: AC24
       name: SWDIO
       direction: bidirectional
@@ -314,7 +306,6 @@ component:
           resistance: { value: 10, unit: kΩ }
           to: GND
 
-    # ── USB ───────────────────────────────────────────────────────────────────
     - number: AD6
       name: D+
       direction: bidirectional
@@ -327,7 +318,6 @@ component:
       primary_function:
         type: usb_dm
 
-    # ── NFC (also P0.09 / P0.10 when used as GPIO) ───────────────────────────
     - number: L24
       name: NFC1
       direction: bidirectional
@@ -340,15 +330,12 @@ component:
       primary_function:
         type: nfc_antenna
 
-    # ── RF antenna ───────────────────────────────────────────────────────────
-    # Requires external matching network. Net name kept as ANT for the circuit.
     - number: H23
       name: ANT
       direction: passive
       net: ANT
+      remark: "Requires external matching network."
 
-    # ── Reset (P0.18) ─────────────────────────────────────────────────────────
-    # Active-low reset. External pull-up required; optional 100 nF filter cap.
     - number: AC13
       name: RESET
       direction: bidirectional
@@ -364,18 +351,15 @@ component:
           capacitance: { value: 100, unit: nF }
           to: GND
 
-    # ── GPIO Port 0 ───────────────────────────────────────────────────────────
-    # All GPIO pins support: digital I/O, configurable pull-up/pull-down,
-    # drive strength 0.5–15 mA, and flexible peripheral assignment (SPI, I2C,
-    # UART, PWM, PDM, I2S, QDEC, etc.) via the Programmable Peripheral
-    # Interconnect (PPI). Max GPIO frequency: 30 MHz.
     - number: L1
       name: P0.06
       direction: bidirectional
+      remark: "All GPIO pins support digital I/O, configurable pull-up/pull-down, drive strength 0.5–15 mA, and flexible peripheral assignment (SPI, I2C, UART, PWM, PDM, I2S, QDEC, etc.) via the Programmable Peripheral Interconnect (PPI). Max GPIO frequency: 30 MHz."
 
     - number: M2
       name: P0.07
-      direction: bidirectional   # alt: TRACECLK
+      direction: bidirectional
+      remark: "alt: TRACECLK"
 
     - number: N1
       name: P0.08
@@ -383,11 +367,13 @@ component:
 
     - number: T2
       name: P0.11
-      direction: bidirectional   # alt: TRACEDATA2
+      direction: bidirectional
+      remark: "alt: TRACEDATA2"
 
     - number: U1
       name: P0.12
-      direction: bidirectional   # alt: TRACEDATA1
+      direction: bidirectional
+      remark: "alt: TRACEDATA1"
 
     - number: AD8
       name: P0.13
@@ -445,7 +431,6 @@ component:
       name: P0.27
       direction: bidirectional
 
-    # ── ADC inputs (shared with GPIO P0.02–P0.05 and P0.28–P0.31) ────────────
     - number: A12
       name: AIN0
       direction: bidirectional
@@ -494,10 +479,10 @@ component:
       primary_function:
         type: adc
 
-    # ── GPIO Port 1 ───────────────────────────────────────────────────────────
     - number: AD22
       name: P1.00
-      direction: bidirectional   # alt: TRACEDATA0
+      direction: bidirectional
+      remark: "alt: TRACEDATA0"
 
     - number: Y23
       name: P1.01
@@ -533,7 +518,8 @@ component:
 
     - number: R1
       name: P1.09
-      direction: bidirectional   # alt: TRACEDATA3
+      direction: bidirectional
+      remark: "alt: TRACEDATA3"
 
     - number: A20
       name: P1.10
@@ -571,8 +557,6 @@ component:
         dp: D+
         dm: D-
 
-    # The following interfaces can be mapped to any GPIO via PPI.
-    # Specify the desired pins in the circuit instance under pin_config.
     - type: I2C
       instance: 1
       speed_max: { value: 400, unit: kHz }

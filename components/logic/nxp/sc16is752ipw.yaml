@@ -1,0 +1,387 @@
+$schema: "https://github.com/mageoch/silicai/schema/component.schema.json"
+$schema_version: "0.1.0"
+
+component:
+  mpn: SC16IS752IPW
+  manufacturer: NXP Semiconductors
+  category: logic
+  package: TSSOP-28
+  datasheet: "https://www.nxp.com/docs/en/data-sheet/SC16IS752_760.pdf"
+  kicad_symbol: "Interface_UART:SC16IS752IPW"
+
+  temperature_range:
+    operating:
+      min: { value: -40, unit: °C }
+      max: { value: 85, unit: °C }
+    storage:
+      min: { value: -65, unit: °C }
+      max: { value: 150, unit: °C }
+    junction_max:          { value: 150, unit: °C }
+    thermal_resistance_ja: { value: 95, unit: °C/W }
+
+  absolute_maximum_ratings:
+    - parameter: supply_voltage
+      pins: ["VCC"]
+      unit: V
+      min: -0.5
+      max: 4
+    - parameter: input_voltage
+      pins: ["SDA/SDI", "SCL/SCLK", "CS", "A0/INTB", "A1/CLKSEL", "XTAL1", "XTAL2"]
+      unit: V
+      min: -0.5
+      max: 4
+    - parameter: uart_pin_voltage
+      pins: ["RXA", "RXB", "TXDA", "TXDB", "RTSA", "RTSB", "CTSA", "CTSB"]
+      unit: V
+      min: -0.5
+      max: 4
+    - parameter: reset_voltage
+      pins: ["RESET"]
+      unit: V
+      min: -0.5
+      max: 4
+    - parameter: irq_voltage
+      pins: ["IRQ"]
+      unit: V
+      min: -0.5
+      max: 4
+    - parameter: junction_temperature
+      pins: []
+      unit: °C
+      min: -40
+      max: 150
+    - parameter: storage_temperature
+      pins: []
+      unit: °C
+      min: -65
+      max: 150
+
+  recommended_operating_conditions:
+    - parameter: supply_voltage
+      pins: ["VCC"]
+      unit: V
+      min: 1.62
+      nom: 3.3
+      max: 3.6
+    - parameter: input_high_voltage
+      pins: ["SDA/SDI", "SCL/SCLK", "CS", "A0/INTB", "A1/CLKSEL"]
+      unit: V
+      min: 0.7
+      max: 3.6
+    - parameter: input_low_voltage
+      pins: ["SDA/SDI", "SCL/SCLK", "CS", "A0/INTB", "A1/CLKSEL"]
+      unit: V
+      min: 0
+      max: 0.3
+    - parameter: operating_temperature
+      pins: []
+      unit: °C
+      min: -40
+      max: 85
+
+  power_consumption:
+    - mode: active_i2c
+      description: "Both UARTs active, I2C host interface, 3 MHz crystal"
+      rail: vcc
+      current: { value: 5, unit: mA }
+      current_max: { value: 8, unit: mA }
+      conditions: "VCC=3.3V, XTAL=3 MHz, I2C mode, both channels transmitting"
+    - mode: sleep
+      description: "Sleep mode, no UART activity, crystal oscillator running"
+      rail: vcc
+      current: { value: 10, unit: µA }
+      current_max: { value: 50, unit: µA }
+      conditions: "VCC=3.3V, sleep bit set, crystal running"
+    - mode: powerdown
+      description: "Power-down via RESET pin asserted"
+      rail: vcc
+      current: { value: 1, unit: µA }
+      current_max: { value: 10, unit: µA }
+      conditions: "VCC=3.3V, RESET=GND"
+
+  rails:
+    - id: vcc
+      net: VCC_3V3
+      per_pin_decoupling:
+        - type: capacitor
+          capacitance: { value: 100, unit: nF }
+          voltage_rating: { value: 10, unit: V }
+          dielectric: [X5R, X7R]
+          placement: close
+      bulk_decoupling:
+        - type: capacitor
+          capacitance: { value: 10, unit: µF }
+          voltage_rating: { value: 10, unit: V }
+          dielectric: [X5R, X7R]
+          placement: nearby
+
+  pins:
+    - number: 1
+      name: "A0/INTB"
+      direction: input
+      must_connect: true
+      primary_function:
+        type: address_select
+        options:
+          - connect_to: GND
+            i2c_address: "0x48"
+          - connect_to: VCC_3V3
+            i2c_address: "0x4C"
+      electrical:
+        v_ih_min: { multiplier: 0.7, reference: VCC }
+        v_il_max: { multiplier: 0.3, reference: VCC }
+
+    - number: 2
+      name: "A1/CLKSEL"
+      direction: input
+      must_connect: true
+      primary_function:
+        type: address_select
+        options:
+          - connect_to: GND
+            i2c_address: "0x48"
+          - connect_to: VCC_3V3
+            i2c_address: "0x4A"
+      electrical:
+        v_ih_min: { multiplier: 0.7, reference: VCC }
+        v_il_max: { multiplier: 0.3, reference: VCC }
+
+    - number: 3
+      name: "VCC"
+      direction: power_in
+      must_connect: true
+      rail: vcc
+
+    - number: 4
+      name: "GND"
+      direction: power_in
+      must_connect: true
+      net: GND
+
+    - number: 5
+      name: "CS"
+      direction: input
+      primary_function:
+        type: spi_cs
+        polarity: active_low
+      electrical:
+        v_ih_min: { multiplier: 0.7, reference: VCC }
+        v_il_max: { multiplier: 0.3, reference: VCC }
+
+    - number: 6
+      name: "RESET"
+      direction: input
+      must_connect: true
+      primary_function:
+        type: reset
+        polarity: active_low
+      electrical:
+        v_ih_min: { multiplier: 0.7, reference: VCC }
+        v_il_max: { multiplier: 0.3, reference: VCC }
+      required_external:
+        - type: resistor
+          resistance: { value: 10, unit: kΩ }
+          from: RESET
+          to: VCC_3V3
+          scope: component
+
+    - number: 7
+      name: "IRQ"
+      direction: output
+      open_drain: true
+      primary_function:
+        type: interrupt
+        polarity: active_low
+      electrical:
+        v_oh_min: { multiplier: 0.8, reference: VCC }
+        v_ol_max: { value: 0.4, unit: V }
+      required_external:
+        - type: resistor
+          resistance: { value: 10, unit: kΩ }
+          from: IRQ
+          to: VCC_3V3
+          scope: component
+
+    - number: 8
+      name: "XTAL1"
+      direction: input
+      primary_function:
+        type: clock_in
+
+    - number: 9
+      name: "XTAL2"
+      direction: output
+      primary_function:
+        type: clock_out
+
+    - number: 10
+      name: "SCL/SCLK"
+      direction: input
+      primary_function:
+        type: i2c_scl
+      electrical:
+        v_ih_min: { multiplier: 0.7, reference: VCC }
+        v_il_max: { multiplier: 0.3, reference: VCC }
+
+    - number: 11
+      name: "SDA/SDI"
+      direction: bidirectional
+      open_drain: true
+      primary_function:
+        type: i2c_sda
+      electrical:
+        v_ih_min: { multiplier: 0.7, reference: VCC }
+        v_il_max: { multiplier: 0.3, reference: VCC }
+
+    - number: 12
+      name: "TXDA"
+      direction: output
+      primary_function:
+        type: uart_tx
+      electrical:
+        v_oh_min: { multiplier: 0.8, reference: VCC }
+        v_ol_max: { value: 0.4, unit: V }
+
+    - number: 13
+      name: "RTSA"
+      direction: output
+      open_drain: false
+      primary_function:
+        type: gpio
+      electrical:
+        v_oh_min: { multiplier: 0.8, reference: VCC }
+        v_ol_max: { value: 0.4, unit: V }
+
+    - number: 14
+      name: "CTSA"
+      direction: input
+      primary_function:
+        type: gpio
+      electrical:
+        v_ih_min: { multiplier: 0.7, reference: VCC }
+        v_il_max: { multiplier: 0.3, reference: VCC }
+
+    - number: 15
+      name: "RXA"
+      direction: input
+      primary_function:
+        type: uart_rx
+      electrical:
+        v_ih_min: { multiplier: 0.7, reference: VCC }
+        v_il_max: { multiplier: 0.3, reference: VCC }
+
+    - number: 16
+      name: "RXB"
+      direction: input
+      primary_function:
+        type: uart_rx
+      electrical:
+        v_ih_min: { multiplier: 0.7, reference: VCC }
+        v_il_max: { multiplier: 0.3, reference: VCC }
+
+    - number: 17
+      name: "CTSB"
+      direction: input
+      primary_function:
+        type: gpio
+      electrical:
+        v_ih_min: { multiplier: 0.7, reference: VCC }
+        v_il_max: { multiplier: 0.3, reference: VCC }
+
+    - number: 18
+      name: "RTSB"
+      direction: output
+      primary_function:
+        type: gpio
+      electrical:
+        v_oh_min: { multiplier: 0.8, reference: VCC }
+        v_ol_max: { value: 0.4, unit: V }
+
+    - number: 19
+      name: "TXDB"
+      direction: output
+      primary_function:
+        type: uart_tx
+      electrical:
+        v_oh_min: { multiplier: 0.8, reference: VCC }
+        v_ol_max: { value: 0.4, unit: V }
+
+    - number: 20
+      name: "GND"
+      direction: power_in
+      must_connect: true
+      net: GND
+
+    - number: 21
+      name: "VCC"
+      direction: power_in
+      must_connect: true
+      rail: vcc
+
+    - number: 22
+      name: "SDO/A2"
+      direction: output
+      primary_function:
+        type: spi_miso
+      electrical:
+        v_oh_min: { multiplier: 0.8, reference: VCC }
+        v_ol_max: { value: 0.4, unit: V }
+
+    - number: 23
+      name: "NC"
+      direction: no_connect
+
+    - number: 24
+      name: "NC"
+      direction: no_connect
+
+    - number: 25
+      name: "NC"
+      direction: no_connect
+
+    - number: 26
+      name: "NC"
+      direction: no_connect
+
+    - number: 27
+      name: "NC"
+      direction: no_connect
+
+    - number: 28
+      name: "NC"
+      direction: no_connect
+
+  interfaces:
+    - type: I2C
+      instance: 1
+      speed_max: { value: 400, unit: kHz }
+      pins:
+        scl: "SCL/SCLK"
+        sda: "SDA/SDI"
+
+    - type: SPI
+      instance: 1
+      speed_max: { value: 15, unit: MHz }
+      pins:
+        sck: "SCL/SCLK"
+        mosi: "SDA/SDI"
+        miso: "SDO/A2"
+        cs: "CS"
+
+    - type: UART
+      instance: 1
+      speed_max: { value: 5, unit: Mbps }
+      pins:
+        tx: TXDA
+        rx: RXA
+        rts: RTSA
+        cts: CTSA
+
+    - type: UART
+      instance: 2
+      speed_max: { value: 5, unit: Mbps }
+      pins:
+        tx: TXDB
+        rx: RXB
+        rts: RTSB
+        cts: CTSB

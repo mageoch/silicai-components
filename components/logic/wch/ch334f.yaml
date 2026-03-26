@@ -1,0 +1,207 @@
+$schema: "https://github.com/mageoch/silicai/schema/component.schema.json"
+$schema_version: "0.1.0"
+
+component:
+  mpn: CH334F
+  manufacturer: WCH (Nanjing Qinheng Microelectronics)
+  category: logic
+  package: QFN-24-4x4
+  datasheet: "https://www.wch.cn/downloads/CH334DS1_PDF.html"
+
+  description: >
+    USB 2.0 4-port hub controller IC compliant with USB 2.0 specification.
+    Upstream port supports HS (480Mbps) and FS (12Mbps); downstream ports
+    support HS 480Mbps, FS 12Mbps and LS 1.5Mbps. Supports MTT (Multiple
+    Transaction Translator) mode with one TT per downstream port for full
+    parallel bandwidth. Integrated LDO (3.3V), crystal oscillator with internal
+    capacitors (12MHz), 1.5kΩ upstream pull-up and downstream pull-down
+    resistors, and PLL for 480MHz USB PHY clock. ESD performance 6kV Class 3A
+    on USB pins. Industrial temperature range -40 to 85°C.
+
+  temperature_range:
+    operating:
+      min: { value: -40, unit: "°C" }
+      max: { value: 85, unit: "°C" }
+
+  absolute_maximum_ratings:
+    - parameter: supply_voltage_v5
+      pins: ["V5"]
+      unit: V
+      min: -0.3
+      max: 5.5
+      conditions: "5V or 3.3V power input pin"
+    - parameter: supply_voltage_vdd33
+      pins: ["VDD33"]
+      unit: V
+      min: -0.3
+      max: 3.6
+      conditions: "3.3V main power / LDO output"
+    - parameter: io_voltage
+      pins: []
+      unit: V
+      min: -0.3
+      max: 3.6
+      conditions: "General I/O pins (3.3V logic)"
+    - parameter: io_voltage_5v_tolerant
+      pins: ["RESET#/CDP"]
+      unit: V
+      min: -0.3
+      max: 5.5
+      conditions: "5V-tolerant input pins"
+    - parameter: esd_usb_pins
+      pins: ["DMU", "DPU", "DM1", "DP1", "DM2", "DP2", "DM3", "DP3", "DM4", "DP4"]
+      unit: kV
+      max: 6
+      conditions: "Enhanced ESD Class 3A"
+    - parameter: operating_temperature
+      pins: []
+      unit: "°C"
+      min: -40
+      max: 85
+
+  rails:
+    - id: v5
+      net: V5
+      description: "5V or 3.3V bus power input. Bypass with 1µF or larger capacitor."
+      per_pin_decoupling:
+        - type: capacitor
+          capacitance: { value: 1, unit: µF }
+          placement: close
+    - id: vdd33
+      net: VDD33
+      description: "3.3V main power rail. LDO output when powered from V5=5V, or direct 3.3V input. Bypass with 0.1µF + 10µF."
+      per_pin_decoupling:
+        - type: capacitor
+          capacitance: { value: 100, unit: nF }
+          placement: close
+        - type: capacitor
+          capacitance: { value: 10, unit: µF }
+          placement: close
+
+  pins:
+    - number: 1
+      name: LED1/PSELF
+      direction: output
+      description: "Port status LED 1 output. During reset, configures power supply mode (PSELF): high=self-powered, low=bus-powered."
+
+    - number: 2
+      name: DPU
+      direction: bidirectional
+      description: "Upstream port USB 2.0 D+ signal."
+
+    - number: 3
+      name: LED2/PGANG
+      direction: output
+      description: "Port status LED 2 output. During reset, configures overcurrent protection mode (PGANG)."
+
+    - number: 4
+      name: DMU
+      direction: bidirectional
+      description: "Upstream port USB 2.0 D- signal."
+
+    - number: 5
+      name: NC
+      direction: no_connect
+      description: "No connect / reserved. Do not connect."
+
+    - number: 6
+      name: VDD33
+      direction: power_in
+      rail: vdd33
+      description: "3.3V main power supply. LDO output when V5=5V input. Bypass with 0.1µF + 10µF."
+
+    - number: 7
+      name: DM1
+      direction: bidirectional
+      description: "Downstream port 1 USB 2.0 D- signal."
+
+    - number: 8
+      name: DP1
+      direction: bidirectional
+      description: "Downstream port 1 USB 2.0 D+ signal."
+
+    - number: 9
+      name: DM2
+      direction: bidirectional
+      description: "Downstream port 2 USB 2.0 D- signal."
+
+    - number: 10
+      name: DP2
+      direction: bidirectional
+      description: "Downstream port 2 USB 2.0 D+ signal."
+
+    - number: 11
+      name: DM3
+      direction: bidirectional
+      description: "Downstream port 3 USB 2.0 D- signal."
+
+    - number: 12
+      name: DP3
+      direction: bidirectional
+      description: "Downstream port 3 USB 2.0 D+ signal."
+
+    - number: 13
+      name: LED3/SCL
+      direction: output
+      description: "Port status LED 3 output. During reset, EEPROM clock signal (SCL) output."
+
+    - number: 14
+      name: XI
+      direction: input
+      description: "Crystal oscillator input. Connect one terminal of 12MHz crystal; internal capacitors included."
+
+    - number: 15
+      name: XO
+      direction: output
+      description: "Crystal oscillator output. Connect other terminal of 12MHz crystal."
+
+    - number: 16
+      name: NC
+      direction: no_connect
+      description: "No connect / reserved. Do not connect."
+
+    - number: 17
+      name: NC
+      direction: no_connect
+      description: "No connect / reserved. Do not connect."
+
+    - number: 18
+      name: PWREN#
+      direction: output
+      description: "Downstream port power enable (GANG mode, active low). Controls external USB power switch."
+
+    - number: 19
+      name: V5
+      direction: power_in
+      rail: v5
+      description: "5V or 3.3V bus power input. Bypass with 1µF or larger capacitor."
+
+    - number: 20
+      name: DM4
+      direction: bidirectional
+      description: "Downstream port 4 USB 2.0 D- signal."
+
+    - number: 21
+      name: DP4
+      direction: bidirectional
+      description: "Downstream port 4 USB 2.0 D+ signal."
+
+    - number: 22
+      name: LED4/SDA
+      direction: bidirectional
+      description: "Port status LED 4 output. During reset, EEPROM bidirectional data signal (SDA)."
+
+    - number: 23
+      name: OVCUR#
+      direction: input
+      description: "GANG overcurrent detection input (active low, 5V-tolerant). Pull up to VDD33 via 47kΩ when unused."
+
+    - number: 24
+      name: RESET#/CDP
+      direction: input
+      description: "External reset input, active low, 5V-tolerant, internal pull-up. During reset, configures CDP (Charging Downstream Port) mode. Leave floating if unused."
+
+    - number: 0
+      name: GND_EP
+      direction: power_in
+      description: "Exposed pad (QFN bottom). Connect to GND plane."

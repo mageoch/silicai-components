@@ -1,0 +1,206 @@
+$schema: "https://github.com/mageoch/silicai/schema/component.schema.json"
+$schema_version: "0.1.0"
+
+component:
+  mpn: Ag5300
+  manufacturer: Silvertel
+  category: power_ic
+  package: SIL-10
+  datasheet: "https://silvertel.com/images/datasheets/Ag5300-datasheet-smallest-30W-Power-Over-Ethernet-Plus-Module-PoEplusPD.pdf"
+
+  description: >
+    IEEE 802.3at / 802.3af compliant Power-over-Ethernet Plus (PoE+) Powered Device (PD)
+    module. Extracts power from a Cat5 Ethernet cable and provides a regulated 12V DC output
+    (nominal) via an internal high-efficiency DC/DC converter with 1500Vdc isolation.
+    Maximum 30W peak / 24W continuous output power. SIL package: 57.3mm (L) x 14mm (H).
+
+  temperature_range:
+    operating:
+      min: { value: -40, unit: °C }
+      max: { value: 85, unit: °C }
+    storage:
+      min: { value: -40, unit: °C }
+      max: { value: 100, unit: °C }
+
+  absolute_maximum_ratings:
+    - parameter: dc_supply_voltage
+      pins: [VIN+, VIN-]
+      unit: V
+      min: -0.3
+      max: 60
+    - parameter: dc_supply_voltage_surge_1ms
+      pins: [VIN+, VIN-]
+      unit: V
+      min: -0.6
+      max: 80
+    - parameter: storage_temperature
+      pins: []
+      unit: °C
+      min: -40
+      max: 100
+
+  recommended_operating_conditions:
+    - parameter: poe_input_supply_voltage
+      pins: [VIN+, VIN-]
+      unit: V
+      min: 36
+      nom: 52
+      max: 57
+    - parameter: poe_input_undervoltage_lockout
+      pins: [VIN+, VIN-]
+      unit: V
+      min: 30
+      max: 36
+    - parameter: operating_temperature
+      pins: []
+      unit: °C
+      min: -40
+      nom: 25
+      max: 85
+
+  dc_characteristics:
+    - parameter: nominal_output_voltage
+      pins: [+VDC, -VDC]
+      unit: V
+      min: 11.5
+      nom: 12.0
+      max: 12.5
+      conditions: "VIN=52V, Ta=25°C"
+    - parameter: continuous_output_current
+      pins: [+VDC, -VDC]
+      unit: A
+      max: 2
+      conditions: "VIN=42.5V min for max output at 25°C"
+    - parameter: minimum_load_current
+      pins: [+VDC, -VDC]
+      unit: mA
+      min: 200
+      conditions: "Required to maintain PSE MPS and avoid audible noise"
+    - parameter: line_regulation
+      pins: [+VDC, -VDC]
+      unit: "%"
+      nom: 0.1
+      conditions: "VIN=36V to 57V at 50% load"
+    - parameter: load_regulation
+      pins: [+VDC, -VDC]
+      unit: "%"
+      nom: 0.2
+      conditions: "Min to max load, VIN=50V"
+    - parameter: output_ripple_noise_max
+      pins: [+VDC, -VDC]
+      unit: mVp-p
+      nom: 56
+      conditions: "Maximum load, Ta=25°C"
+    - parameter: peak_efficiency
+      pins: []
+      unit: "%"
+      nom: 87
+      conditions: "VIN=52V, Ta=25°C"
+    - parameter: isolation_voltage
+      pins: [VIN+, VIN-, +VDC, -VDC]
+      unit: Vpk
+      max: 1500
+      conditions: "Input to output, impulse test per IEC 60950-1:2001"
+    - parameter: short_circuit_duration
+      pins: [+VDC, -VDC]
+      unit: sec
+      nom: null
+      conditions: "Continuous @ 25°C; built-in short-circuit protection"
+
+  rails:
+    - id: vin
+      net: VIN+
+      description: "PoE input positive rail (after external bridge rectifier)"
+    - id: vout
+      net: +VDC
+      description: "Regulated 12V DC output"
+      per_pin_decoupling:
+        - type: capacitor
+          capacitance: { value: 470, unit: µF }
+          voltage_rating: { value: 16, unit: V }
+          placement: close
+          description: >
+            Required for output stability and load step response.
+            Electrolytic type; use low-ESR if ambient temperature below 0°C.
+
+  pins:
+    - number: 1
+      name: VIN+
+      direction: power_in
+      rail: vin
+      description: >
+        POE Direct Input +. Connects to the positive (+) output of the external
+        POE input bridge rectifiers (e.g. DF01S).
+
+    - number: 2
+      name: VIN-
+      direction: power_in
+      net: GND_ISO
+      description: >
+        POE Direct Input -. Connects to the negative (-) output of the external
+        POE input bridge rectifiers. This is the isolated input ground reference.
+
+    - number: 3
+      name: AT-DET
+      direction: output
+      description: >
+        AT Detect Output. Open-collector output that indicates whether an
+        IEEE 802.3at PSE (Type 2) is supplying power via Two Event Physical Layer
+        classification. Connect a 27K pull-down resistor to VIN- and drive an
+        opto-coupler (e.g. PC817) to signal across the isolation barrier.
+        Logic 0 = AT PSE detected (>15.4W available); Logic 1 = AF PSE only.
+      electrical:
+        output_type: open_collector
+
+    - number: 4
+      name: IC
+      direction: no_connect
+      description: "Internal Connection. Do not connect to this pin."
+
+    - number: 5
+      name: IC
+      direction: no_connect
+      description: >
+        Internal Connection. Do not connect to this pin.
+        For ESD resilience, a 10nF capacitor may optionally be connected between
+        pin 5 and pin 2 to keep the output active during an ESD event.
+
+    - number: 6
+      name: IC
+      direction: no_connect
+      description: "Internal Connection. Do not connect to this pin."
+
+    - number: 7
+      name: -VDC
+      direction: power_out
+      net: GND_OUT
+      description: >
+        Negative DC Output. Provides the negative regulated output reference.
+        Internally connected to pin 10. This is the isolated output ground.
+
+    - number: 8
+      name: +VDC
+      direction: power_out
+      rail: vout
+      description: >
+        Positive DC Output. Provides the positive regulated 12V DC output.
+        Connect a 470µF 16V electrolytic capacitor from this pin to -VDC
+        as close as possible to the output pins.
+
+    - number: 9
+      name: ADJ
+      direction: input
+      description: >
+        Output Adjust. Allows the output voltage to be trimmed from its nominal
+        value by connecting an external resistor (RA) between this pin and either
+        +VDC (to decrease output, min 10.8V) or -VDC (to increase output, max 12.8V).
+        Leave unconnected for nominal 12V output.
+        WARNING: Do not reduce below 10.8V or the module may be permanently damaged.
+
+    - number: 10
+      name: -VDC
+      direction: power_out
+      net: GND_OUT
+      description: >
+        Negative DC Output. Provides the negative regulated output reference.
+        Internally connected to pin 7. This is the isolated output ground.

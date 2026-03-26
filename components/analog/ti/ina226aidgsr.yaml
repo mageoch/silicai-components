@@ -1,0 +1,243 @@
+$schema: "https://github.com/mageoch/silicai/schema/component.schema.json"
+$schema_version: "0.1.0"
+
+component:
+  mpn: INA226AIDGSR
+  manufacturer: Texas Instruments
+  category: analog
+  package: VSSOP-10
+  datasheet: "https://www.ti.com/lit/ds/symlink/ina226.pdf"
+  kicad_symbol: "Analog_ADC:INA226xDGS"
+
+  temperature_range:
+    operating:
+      min: { value: -40, unit: °C }
+      max: { value: 125, unit: °C }
+    storage:
+      min: { value: -65, unit: °C }
+      max: { value: 150, unit: °C }
+    junction_max:          { value: 150, unit: °C }
+    thermal_resistance_ja: { value: 144.6, unit: °C/W }
+
+  power_consumption:
+    - mode: active
+      description: "Continuous conversion mode (shunt + bus voltage)"
+      rail: vs
+      current: { value: 330, unit: µA }
+      current_max: { value: 420, unit: µA }
+      conditions: "VS=3.3V, continuous conversion"
+    - mode: shutdown
+      description: "Power-down/shutdown mode"
+      rail: vs
+      current: { value: 0.5, unit: µA }
+      current_max: { value: 2, unit: µA }
+      conditions: "VS=3.3V, MODE bits = 000"
+
+  absolute_maximum_ratings:
+    - parameter: supply_voltage
+      pins: ["VS"]
+      unit: V
+      max: 6
+    - parameter: differential_input_voltage
+      pins: ["IN+", "IN-"]
+      unit: V
+      min: -40
+      max: 40
+    - parameter: common_mode_input_voltage
+      pins: ["IN+", "IN-"]
+      unit: V
+      min: -0.3
+      max: 40
+    - parameter: bus_voltage
+      pins: ["VBUS"]
+      unit: V
+      min: -0.3
+      max: 40
+    - parameter: sda_voltage
+      pins: ["SDA"]
+      unit: V
+      min: -0.3
+      max: 6
+    - parameter: scl_voltage
+      pins: ["SCL"]
+      unit: V
+      min: -0.3
+      max: 6
+    - parameter: junction_temperature
+      pins: []
+      unit: °C
+      max: 150
+    - parameter: storage_temperature
+      pins: []
+      unit: °C
+      min: -65
+      max: 150
+
+  recommended_operating_conditions:
+    - parameter: supply_voltage
+      pins: ["VS"]
+      unit: V
+      min: 2.7
+      nom: 3.3
+      max: 5.5
+    - parameter: common_mode_input_voltage
+      pins: ["IN+", "IN-"]
+      unit: V
+      min: 0
+      nom: 12
+      max: 36
+    - parameter: operating_temperature
+      pins: []
+      unit: °C
+      min: -40
+      max: 125
+
+  rails:
+    - id: vs
+      net: VCC_3V3
+      per_pin_decoupling:
+        - type: capacitor
+          capacitance: { value: 100, unit: nF }
+          voltage_rating: { value: 10, unit: V }
+          dielectric: [X5R, X7R]
+          placement: close
+
+  pins:
+    - number: 1
+      name: A1
+      direction: input
+      must_connect: true
+      primary_function:
+        type: address_select
+        options:
+          - connect_to: GND
+            i2c_address: "0x40"
+          - connect_to: VS
+            i2c_address: "0x44"
+          - connect_to: SDA
+            i2c_address: "0x48"
+          - connect_to: SCL
+            i2c_address: "0x4C"
+      required_external:
+        - type: resistor
+          resistance: { value: 10, unit: kΩ }
+          from: A1
+          to: GND
+          scope: component
+
+    - number: 2
+      name: A0
+      direction: input
+      must_connect: true
+      primary_function:
+        type: address_select
+        options:
+          - connect_to: GND
+            i2c_address: "0x40"
+          - connect_to: VS
+            i2c_address: "0x41"
+          - connect_to: SDA
+            i2c_address: "0x42"
+          - connect_to: SCL
+            i2c_address: "0x43"
+      required_external:
+        - type: resistor
+          resistance: { value: 10, unit: kΩ }
+          from: A0
+          to: GND
+          scope: component
+
+    - number: 3
+      name: Alert
+      direction: output
+      open_drain: true
+      primary_function:
+        type: alert
+        polarity: active_low
+      electrical:
+        v_ol_max: { value: 0.4, unit: V }
+      required_external:
+        - type: resistor
+          resistance: { value: 10, unit: kΩ }
+          from: Alert
+          to: VCC_3V3
+          scope: component
+
+    - number: 4
+      name: SDA
+      direction: bidirectional
+      open_drain: true
+      primary_function:
+        type: i2c_sda
+      electrical:
+        v_ih_min: { multiplier: 0.7, reference: VS }
+        v_il_max: { multiplier: 0.3, reference: VS }
+        v_ol_max: { value: 0.4, unit: V }
+      required_external:
+        - type: resistor
+          resistance: { value: 4.7, unit: kΩ }
+          from: SDA
+          to: VCC_3V3
+          scope: bus
+
+    - number: 5
+      name: SCL
+      direction: input
+      open_drain: true
+      primary_function:
+        type: i2c_scl
+      electrical:
+        v_ih_min: { multiplier: 0.7, reference: VS }
+        v_il_max: { multiplier: 0.3, reference: VS }
+      required_external:
+        - type: resistor
+          resistance: { value: 4.7, unit: kΩ }
+          from: SCL
+          to: VCC_3V3
+          scope: bus
+
+    - number: 6
+      name: VS
+      direction: power_in
+      must_connect: true
+      rail: vs
+
+    - number: 7
+      name: GND
+      direction: power_in
+      net: GND
+
+    - number: 8
+      name: VBUS
+      direction: input
+      primary_function:
+        type: analog_in
+      electrical:
+        v_max: { value: 36, unit: V }
+
+    - number: 9
+      name: "IN-"
+      direction: input
+      primary_function:
+        type: analog_in
+      required_external:
+        - type: resistor
+          resistance: { value: 10, unit: mΩ }
+          from: "IN+"
+          to: "IN-"
+          scope: component
+
+    - number: 10
+      name: "IN+"
+      direction: input
+      primary_function:
+        type: analog_in
+
+  interfaces:
+    - type: I2C
+      instance: 1
+      speed_min: { value: 1, unit: kHz }
+      speed_max: { value: 2940, unit: kHz }
+      pins:
+        scl: SCL
+        sda: SDA

@@ -1,0 +1,1046 @@
+$schema: "https://github.com/mageoch/silicai/schema/component.schema.json"
+$schema_version: "0.1.0"
+
+component:
+  mpn: CM4001000
+  manufacturer: Raspberry Pi Ltd
+  category: mpu
+  package: SOM-100pin-x2
+  datasheet: "https://datasheets.raspberrypi.com/cm4/cm4-datasheet.pdf"
+  description: >
+    Raspberry Pi Compute Module 4 (CM4). System-on-Module containing the
+    Broadcom BCM2711 quad-core Cortex-A72 (ARM v8) 64-bit SoC at 1.5 GHz,
+    1 GB LPDDR4-3200 SDRAM, no on-board eMMC (Lite variant), and no wireless.
+    Interfaces via two 100-pin high-density board-to-board connectors
+    (Hirose DF40C-100DS-0.4V or compatible). 55 mm x 40 mm x 4.7 mm module.
+
+  remark: "Ordering code: CM4<wireless><RAM><storage>. wireless: 0=No, 1=Yes. RAM: 01=1GB 02=2GB 04=4GB 08=8GB. storage: 000=Lite(0GB) 008=8GB 016=16GB 032=32GB. CM4001000 = no wireless, 1 GB RAM, Lite (no eMMC)."
+
+  absolute_maximum_ratings:
+    - parameter: supply_voltage_5v
+      pins: ["+5V_77", "+5V_79", "+5V_81", "+5V_83", "+5V_85", "+5V_87"]
+      unit: V
+      min: -0.5
+      max: 6.0
+    - parameter: gpio_bank_voltage_vref
+      pins: [GPIO_VREF]
+      unit: V
+      min: -0.5
+      max: 3.6
+    - parameter: gpio_input_voltage
+      pins: []
+      unit: V
+      min: -0.5
+      max: 3.6
+      remark: "V_GPIO_VREF + 0.5 V; worst-case at V_GPIO_VREF = 3.1 V"
+
+  recommended_operating_conditions:
+    - parameter: supply_voltage_5v
+      pins: ["+5V_77", "+5V_79", "+5V_81", "+5V_83", "+5V_85", "+5V_87"]
+      unit: V
+      min: 4.75
+      nom: 5.0
+      max: 5.25
+    - parameter: cm4_3v3_output
+      pins: [CM4_3V3_84, CM4_3V3_86]
+      unit: V
+      nom: 3.3
+      description: "On-module 3.3 V regulator output; max 300 mA per pin, 600 mA total"
+    - parameter: cm4_1v8_output
+      pins: [CM4_1V8_88, CM4_1V8_90]
+      unit: V
+      nom: 1.8
+      description: "On-module 1.8 V regulator output; max 300 mA per pin, 600 mA total"
+
+  temperature_range:
+    operating:
+      min: { value: -20, unit: "°C" }
+      max: { value: 85, unit: "°C" }
+
+  power_consumption:
+    - mode: shutdown
+      description: "GLOBAL_EN = 0 V (lowest power-down state)"
+      rail: vdd_5v
+      current: { value: 15, unit: µA }
+    - mode: soft_off
+      description: "GLOBAL_EN > 2 V, software shutdown"
+      rail: vdd_5v
+      current: { value: 8, unit: mA }
+    - mode: idle
+      description: "GLOBAL_EN > 2 V, OS idle"
+      rail: vdd_5v
+      current: { value: 400, unit: mA }
+    - mode: operating
+      description: "GLOBAL_EN > 2 V, typical load"
+      rail: vdd_5v
+      current: { value: 1400, unit: mA }
+
+  rails:
+    - id: vdd_5v
+      net: "+5V"
+      description: "Main 5 V supply input. Multiple pins must all be connected."
+      per_pin_decoupling:
+        - type: capacitor
+          capacitance: { value: 100, unit: nF }
+          voltage_rating: { value: 10, unit: V }
+          dielectric: [X5R, X7R]
+          placement: close
+    - id: vdd_3v3
+      net: CM4_3V3
+      description: "On-module 3.3 V regulated output; max 600 mA total across both pins"
+    - id: vdd_1v8
+      net: CM4_1V8
+      description: "On-module 1.8 V regulated output; max 600 mA total across both pins"
+
+  pins:
+    - number: 1
+      name: GND
+      direction: power_in
+      net: GND
+    - number: 2
+      name: GND
+      direction: passive
+      net: GND
+    - number: 7
+      name: GND
+      direction: passive
+      net: GND
+    - number: 8
+      name: GND
+      direction: passive
+      net: GND
+    - number: 13
+      name: GND
+      direction: passive
+      net: GND
+    - number: 14
+      name: GND
+      direction: passive
+      net: GND
+    - number: 22
+      name: GND
+      direction: passive
+      net: GND
+    - number: 23
+      name: GND
+      direction: passive
+      net: GND
+    - number: 32
+      name: GND
+      direction: passive
+      net: GND
+    - number: 33
+      name: GND
+      direction: passive
+      net: GND
+    - number: 42
+      name: GND
+      direction: passive
+      net: GND
+    - number: 43
+      name: GND
+      direction: passive
+      net: GND
+    - number: 52
+      name: GND
+      direction: passive
+      net: GND
+    - number: 53
+      name: GND
+      direction: passive
+      net: GND
+    - number: 59
+      name: GND
+      direction: passive
+      net: GND
+    - number: 60
+      name: GND
+      direction: passive
+      net: GND
+    - number: 65
+      name: GND
+      direction: passive
+      net: GND
+    - number: 66
+      name: GND
+      direction: passive
+      net: GND
+    - number: 71
+      name: GND
+      direction: passive
+      net: GND
+    - number: 74
+      name: GND
+      direction: passive
+      net: GND
+    - number: 98
+      name: GND
+      direction: passive
+      net: GND
+
+    - number: 3
+      name: Ethernet_Pair3_P
+      direction: passive
+      net: ETH_TRD3_P
+    - number: 4
+      name: Ethernet_Pair1_P
+      direction: passive
+      net: ETH_TRD1_P
+    - number: 5
+      name: Ethernet_Pair3_N
+      direction: passive
+      net: ETH_TRD3_N
+    - number: 6
+      name: Ethernet_Pair1_N
+      direction: passive
+      net: ETH_TRD1_N
+    - number: 9
+      name: Ethernet_Pair2_N
+      direction: passive
+      net: ETH_TRD2_N
+    - number: 10
+      name: Ethernet_Pair0_N
+      direction: passive
+      net: ETH_TRD0_N
+    - number: 11
+      name: Ethernet_Pair2_P
+      direction: passive
+      net: ETH_TRD2_P
+    - number: 12
+      name: Ethernet_Pair0_P
+      direction: passive
+      net: ETH_TRD0_P
+
+    - number: 15
+      name: Ethernet_nLED3
+      direction: output
+      net: ETH_nLED3
+      description: "Active-low Ethernet activity LED (CM4_3.3V signal)"
+    - number: 16
+      name: Ethernet_SYNC_IN
+      direction: input
+      net: ETH_SYNC_IN
+      description: "IEEE 1588 SYNC input (CM4_3.3V)"
+    - number: 17
+      name: Ethernet_nLED2
+      direction: output
+      net: ETH_nLED2
+      description: "Active-low Ethernet speed LED (CM4_3.3V)"
+    - number: 18
+      name: Ethernet_SYNC_OUT
+      direction: output
+      net: ETH_SYNC_OUT
+      description: "IEEE 1588 SYNC output (CM4_3.3V)"
+    - number: 19
+      name: Ethernet_nLED1
+      direction: output
+      net: ETH_nLED1
+      description: "Active-low Ethernet speed LED (CM4_3.3V)"
+
+    - number: 20
+      name: EEPROM_nWP
+      direction: input
+      net: EEPROM_nWP
+      description: "EEPROM write protect. Leave floating (internally pulled to CM4_3.3V via 100 kΩ) or pull low to protect."
+
+    - number: 21
+      name: Pi_nLED_Activity
+      direction: output
+      net: PI_nLED_ACT
+      description: "Active-low Pi activity LED output. 20 mA max, 5 V tolerant."
+
+    - number: 24
+      name: GPIO26
+      direction: bidirectional
+      net: GPIO26
+    - number: 25
+      name: GPIO21
+      direction: bidirectional
+      net: GPIO21
+    - number: 26
+      name: GPIO19
+      direction: bidirectional
+      net: GPIO19
+    - number: 27
+      name: GPIO20
+      direction: bidirectional
+      net: GPIO20
+    - number: 28
+      name: GPIO13
+      direction: bidirectional
+      net: GPIO13
+    - number: 29
+      name: GPIO16
+      direction: bidirectional
+      net: GPIO16
+    - number: 30
+      name: GPIO6
+      direction: bidirectional
+      net: GPIO6
+    - number: 31
+      name: GPIO12
+      direction: bidirectional
+      net: GPIO12
+    - number: 34
+      name: GPIO5
+      direction: bidirectional
+      net: GPIO5
+    - number: 35
+      name: ID_SC
+      direction: bidirectional
+      net: ID_SC
+      description: "BCM2711 GPIO1 — ID EEPROM I2C clock (also GPIO)"
+    - number: 36
+      name: ID_SD
+      direction: bidirectional
+      net: ID_SD
+      description: "BCM2711 GPIO0 — ID EEPROM I2C data (also GPIO)"
+    - number: 37
+      name: GPIO7
+      direction: bidirectional
+      net: GPIO7
+    - number: 38
+      name: GPIO11
+      direction: bidirectional
+      net: GPIO11
+    - number: 39
+      name: GPIO8
+      direction: bidirectional
+      net: GPIO8
+    - number: 40
+      name: GPIO9
+      direction: bidirectional
+      net: GPIO9
+    - number: 41
+      name: GPIO25
+      direction: bidirectional
+      net: GPIO25
+    - number: 44
+      name: GPIO10
+      direction: bidirectional
+      net: GPIO10
+    - number: 45
+      name: GPIO24
+      direction: bidirectional
+      net: GPIO24
+    - number: 46
+      name: GPIO22
+      direction: bidirectional
+      net: GPIO22
+    - number: 47
+      name: GPIO23
+      direction: bidirectional
+      net: GPIO23
+    - number: 48
+      name: GPIO27
+      direction: bidirectional
+      net: GPIO27
+    - number: 49
+      name: GPIO18
+      direction: bidirectional
+      net: GPIO18
+    - number: 50
+      name: GPIO17
+      direction: bidirectional
+      net: GPIO17
+    - number: 51
+      name: GPIO15
+      direction: bidirectional
+      net: GPIO15
+    - number: 54
+      name: GPIO4
+      direction: bidirectional
+      net: GPIO4
+    - number: 55
+      name: GPIO14
+      direction: bidirectional
+      net: GPIO14
+    - number: 56
+      name: GPIO3
+      direction: bidirectional
+      net: GPIO3
+      description: "GPIO3 — 1.8 kΩ internal pull-up to GPIO_VREF"
+    - number: 57
+      name: SD_CLK
+      direction: output
+      net: SD_CLK
+      description: "SD/eMMC clock (CM4Lite only)"
+    - number: 58
+      name: GPIO2
+      direction: bidirectional
+      net: GPIO2
+      description: "GPIO2 — 1.8 kΩ internal pull-up to GPIO_VREF"
+    - number: 61
+      name: SD_DAT3
+      direction: bidirectional
+      net: SD_DAT3
+      description: "SD/eMMC Data3 (CM4Lite only)"
+    - number: 62
+      name: SD_CMD
+      direction: bidirectional
+      net: SD_CMD
+      description: "SD/eMMC Command (CM4Lite only)"
+    - number: 63
+      name: SD_DAT0
+      direction: bidirectional
+      net: SD_DAT0
+      description: "SD/eMMC Data0 (CM4Lite only)"
+    - number: 64
+      name: SD_DAT5
+      direction: bidirectional
+      net: SD_DAT5
+      description: "SD/eMMC Data5 (CM4Lite only)"
+    - number: 67
+      name: SD_DAT1
+      direction: bidirectional
+      net: SD_DAT1
+      description: "SD/eMMC Data1 (CM4Lite only)"
+    - number: 68
+      name: SD_DAT4
+      direction: bidirectional
+      net: SD_DAT4
+      description: "SD/eMMC Data4 (CM4Lite only)"
+    - number: 69
+      name: SD_DAT2
+      direction: bidirectional
+      net: SD_DAT2
+      description: "SD/eMMC Data2 (CM4Lite only)"
+    - number: 70
+      name: SD_DAT7
+      direction: bidirectional
+      net: SD_DAT7
+      description: "SD/eMMC Data7 (CM4Lite only)"
+    - number: 72
+      name: SD_DAT6
+      direction: bidirectional
+      net: SD_DAT6
+      description: "SD/eMMC Data6 (CM4Lite only)"
+    - number: 73
+      name: SD_VDD_OVERRIDE
+      direction: input
+      net: SD_VDD_OVERRIDE
+      description: "Drive high (3.3 V) to force SD/eMMC interface to 1.8 V signalling"
+    - number: 75
+      name: SD_PWR_ON
+      direction: output
+      net: SD_PWR_ON
+      description: "Output to power-switch for SD card; high = power on (CM4Lite only)"
+
+    - number: 76
+      name: RESERVED_76
+      direction: no_connect
+      net: NC
+
+    - number: 77
+      name: "+5V_77"
+      direction: power_in
+      rail: vdd_5v
+      net: "+5V"
+      description: "4.75–5.25 V main power input"
+    - number: 79
+      name: "+5V_79"
+      direction: power_in
+      rail: vdd_5v
+      net: "+5V"
+      description: "4.75–5.25 V main power input"
+    - number: 81
+      name: "+5V_81"
+      direction: power_in
+      rail: vdd_5v
+      net: "+5V"
+      description: "4.75–5.25 V main power input"
+    - number: 83
+      name: "+5V_83"
+      direction: power_in
+      rail: vdd_5v
+      net: "+5V"
+      description: "4.75–5.25 V main power input"
+    - number: 85
+      name: "+5V_85"
+      direction: power_in
+      rail: vdd_5v
+      net: "+5V"
+      description: "4.75–5.25 V main power input"
+    - number: 87
+      name: "+5V_87"
+      direction: power_in
+      rail: vdd_5v
+      net: "+5V"
+      description: "4.75–5.25 V main power input"
+
+    - number: 78
+      name: GPIO_VREF
+      direction: input
+      net: GPIO_VREF
+      must_connect: true
+      description: "GPIO bank voltage reference. Must be tied to CM4_3.3V (pins 84/86) for 3.3 V GPIO or CM4_1.8V (pins 88/90) for 1.8 V GPIO. Must not be floating or grounded."
+
+    - number: 80
+      name: SCL0
+      direction: bidirectional
+      net: SCL0
+      description: "I2C clock (BCM2711 GPIO45); typically for Camera and Display. Internal 1.8 kΩ pull-up to CM4_3.3V."
+    - number: 82
+      name: SDA0
+      direction: bidirectional
+      net: SDA0
+      description: "I2C data (BCM2711 GPIO44); typically for Camera and Display. Internal 1.8 kΩ pull-up to CM4_3.3V."
+
+    - number: 84
+      name: CM4_3V3_84
+      direction: power_out
+      rail: vdd_3v3
+      net: CM4_3V3
+      description: "3.3 V ±2.5% on-module regulator output. Max 300 mA this pin; 600 mA total (pins 84+86)."
+    - number: 86
+      name: CM4_3V3_86
+      direction: power_out
+      rail: vdd_3v3
+      net: CM4_3V3
+      description: "3.3 V ±2.5% on-module regulator output. Max 300 mA this pin; 600 mA total (pins 84+86)."
+
+    - number: 88
+      name: CM4_1V8_88
+      direction: power_out
+      rail: vdd_1v8
+      net: CM4_1V8
+      description: "1.8 V ±2.5% on-module regulator output. Max 300 mA this pin; 600 mA total (pins 88+90)."
+    - number: 90
+      name: CM4_1V8_90
+      direction: power_out
+      rail: vdd_1v8
+      net: CM4_1V8
+      description: "1.8 V ±2.5% on-module regulator output. Max 300 mA this pin; 600 mA total (pins 88+90)."
+
+    - number: 89
+      name: WL_nDisable
+      direction: bidirectional
+      net: WL_nDISABLE
+      description: "Wireless enable/disable. Internally pulled up via 1.8 kΩ to CM4_3.3V. Drive low to disable WiFi."
+    - number: 91
+      name: BT_nDisable
+      direction: bidirectional
+      net: BT_nDISABLE
+      description: "Bluetooth enable/disable. Internally pulled up via 1.8 kΩ to CM4_3.3V. Drive low to disable BT."
+
+    - number: 92
+      name: RUN_PG
+      direction: bidirectional
+      net: RUN_PG
+      description: "Power-good / reset. Output high when module running. Drive low via 220 Ω to reset CPU. Internally pulled to +3.3V via 10 kΩ."
+    - number: 93
+      name: nRPIBOOT
+      direction: input
+      net: nRPIBOOT
+      description: "Boot select. Pull low to force USB boot mode (rpiboot). Internally pulled to +3.3V via 10 kΩ."
+    - number: 94
+      name: AnalogIP1
+      direction: input
+      net: ANALOG_IP1
+      description: "Analogue input to MXL7704 PMIC; typically CC2 pin of USB-C connector"
+    - number: 95
+      name: PI_LED_nPWR
+      direction: output
+      net: PI_LED_nPWR
+      description: "Active-low power-on LED output. Needs external buffer."
+    - number: 96
+      name: AnalogIP0
+      direction: input
+      net: ANALOG_IP0
+      description: "Analogue input to MXL7704 PMIC; typically CC1 pin of USB-C connector"
+    - number: 97
+      name: Camera_GPIO
+      direction: output
+      net: CAMERA_GPIO
+      description: "Camera shutdown GPIO (CM4_3.3V). Do not reassign."
+    - number: 99
+      name: GLOBAL_EN
+      direction: input
+      net: GLOBAL_EN
+      must_connect: true
+      description: "Drive low to power off the CM4. Internally pulled up via 100 kΩ to +5V. Leave floating for normal operation."
+    - number: 100
+      name: nEXTRST
+      direction: output
+      net: nEXTRST
+      description: "Active-low external reset output. Low during reset; high (CM4_3.3V) once CPU has started to boot."
+
+    - number: 101
+      name: USB_OTG_ID
+      direction: input
+      net: USB_OTG_ID
+      description: "USB OTG ID pin (3.3V). Ground to force host mode."
+    - number: 103
+      name: USB_N
+      direction: bidirectional
+      net: USB_DM
+      description: "USB 2.0 D-"
+    - number: 105
+      name: USB_P
+      direction: bidirectional
+      net: USB_DP
+      description: "USB 2.0 D+"
+
+    - number: 104
+      name: RESERVED_104
+      direction: no_connect
+      net: NC
+    - number: 106
+      name: RESERVED_106
+      direction: no_connect
+      net: NC
+
+    - number: 107
+      name: GND
+      direction: passive
+      net: GND
+    - number: 108
+      name: GND
+      direction: passive
+      net: GND
+    - number: 113
+      name: GND
+      direction: passive
+      net: GND
+    - number: 114
+      name: GND
+      direction: passive
+      net: GND
+    - number: 119
+      name: GND
+      direction: passive
+      net: GND
+    - number: 120
+      name: GND
+      direction: passive
+      net: GND
+    - number: 125
+      name: GND
+      direction: passive
+      net: GND
+    - number: 126
+      name: GND
+      direction: passive
+      net: GND
+    - number: 131
+      name: GND
+      direction: passive
+      net: GND
+    - number: 132
+      name: GND
+      direction: passive
+      net: GND
+    - number: 137
+      name: GND
+      direction: passive
+      net: GND
+    - number: 138
+      name: GND
+      direction: passive
+      net: GND
+    - number: 144
+      name: GND
+      direction: passive
+      net: GND
+    - number: 150
+      name: GND
+      direction: passive
+      net: GND
+    - number: 155
+      name: GND
+      direction: passive
+      net: GND
+    - number: 156
+      name: GND
+      direction: passive
+      net: GND
+    - number: 161
+      name: GND
+      direction: passive
+      net: GND
+    - number: 162
+      name: GND
+      direction: passive
+      net: GND
+    - number: 167
+      name: GND
+      direction: passive
+      net: GND
+    - number: 168
+      name: GND
+      direction: passive
+      net: GND
+    - number: 173
+      name: GND
+      direction: passive
+      net: GND
+    - number: 174
+      name: GND
+      direction: passive
+      net: GND
+    - number: 179
+      name: GND
+      direction: passive
+      net: GND
+    - number: 180
+      name: GND
+      direction: passive
+      net: GND
+    - number: 185
+      name: GND
+      direction: passive
+      net: GND
+    - number: 186
+      name: GND
+      direction: passive
+      net: GND
+    - number: 191
+      name: GND
+      direction: passive
+      net: GND
+    - number: 192
+      name: GND
+      direction: passive
+      net: GND
+    - number: 197
+      name: GND
+      direction: passive
+      net: GND
+    - number: 198
+      name: GND
+      direction: passive
+      net: GND
+
+    - number: 102
+      name: PCIe_CLK_nREQ
+      direction: input
+      net: PCIE_CLK_nREQ
+      description: "PCIe clock request (active-low). Internally pulled up. Drive low to request clock."
+    - number: 109
+      name: PCIe_nRST
+      direction: output
+      net: PCIE_nRST
+      description: "PCIe reset output, active-low (+3.3V signal)"
+    - number: 110
+      name: PCIe_CLK_P
+      direction: output
+      net: PCIE_CLK_P
+      description: "PCIe reference clock positive (100 MHz). AC coupling included on CM4."
+    - number: 112
+      name: PCIe_CLK_N
+      direction: output
+      net: PCIE_CLK_N
+      description: "PCIe reference clock negative (100 MHz). AC coupling included on CM4."
+    - number: 116
+      name: PCIe_RX_P
+      direction: input
+      net: PCIE_RX_P
+      description: "PCIe GEN2 RX positive. External AC coupling required on baseboard."
+    - number: 118
+      name: PCIe_RX_N
+      direction: input
+      net: PCIE_RX_N
+      description: "PCIe GEN2 RX negative. External AC coupling required on baseboard."
+    - number: 122
+      name: PCIe_TX_P
+      direction: output
+      net: PCIE_TX_P
+      description: "PCIe GEN2 TX positive. AC coupling included on CM4."
+    - number: 124
+      name: PCIe_TX_N
+      direction: output
+      net: PCIE_TX_N
+      description: "PCIe GEN2 TX negative. AC coupling included on CM4."
+
+    - number: 111
+      name: VDAC_COMP
+      direction: output
+      net: VDAC_COMP
+      description: "Video DAC composite output (TV OUT)"
+
+    - number: 115
+      name: CAM1_D0_N
+      direction: input
+      net: CAM1_D0_N
+    - number: 117
+      name: CAM1_D0_P
+      direction: input
+      net: CAM1_D0_P
+    - number: 121
+      name: CAM1_D1_N
+      direction: input
+      net: CAM1_D1_N
+    - number: 123
+      name: CAM1_D1_P
+      direction: input
+      net: CAM1_D1_P
+    - number: 127
+      name: CAM1_C_N
+      direction: input
+      net: CAM1_CLK_N
+    - number: 129
+      name: CAM1_C_P
+      direction: input
+      net: CAM1_CLK_P
+    - number: 133
+      name: CAM1_D2_N
+      direction: input
+      net: CAM1_D2_N
+    - number: 135
+      name: CAM1_D2_P
+      direction: input
+      net: CAM1_D2_P
+    - number: 139
+      name: CAM1_D3_N
+      direction: input
+      net: CAM1_D3_N
+    - number: 141
+      name: CAM1_D3_P
+      direction: input
+      net: CAM1_D3_P
+
+    - number: 128
+      name: CAM0_D0_N
+      direction: input
+      net: CAM0_D0_N
+    - number: 130
+      name: CAM0_D0_P
+      direction: input
+      net: CAM0_D0_P
+    - number: 134
+      name: CAM0_D1_N
+      direction: input
+      net: CAM0_D1_N
+    - number: 136
+      name: CAM0_D1_P
+      direction: input
+      net: CAM0_D1_P
+    - number: 140
+      name: CAM0_C_N
+      direction: input
+      net: CAM0_CLK_N
+    - number: 142
+      name: CAM0_C_P
+      direction: input
+      net: CAM0_CLK_P
+
+    - number: 143
+      name: HDMI1_HOTPLUG
+      direction: input
+      net: HDMI1_HPD
+      description: "HDMI1 hotplug detect. Internally pulled down 100 kΩ. 5 V tolerant."
+    - number: 145
+      name: HDMI1_SDA
+      direction: bidirectional
+      net: HDMI1_SDA
+      description: "HDMI1 DDC data. Internally pulled up 1.8 kΩ. 5 V tolerant."
+    - number: 146
+      name: HDMI1_TX2_P
+      direction: output
+      net: HDMI1_TX2_P
+    - number: 147
+      name: HDMI1_SCL
+      direction: bidirectional
+      net: HDMI1_SCL
+      description: "HDMI1 DDC clock. Internally pulled up 1.8 kΩ. 5 V tolerant."
+    - number: 148
+      name: HDMI1_TX2_N
+      direction: output
+      net: HDMI1_TX2_N
+    - number: 149
+      name: HDMI1_CEC
+      direction: bidirectional
+      net: HDMI1_CEC
+      description: "HDMI1 CEC. Internally pulled up 27 kΩ. 5 V tolerant."
+    - number: 152
+      name: HDMI1_TX1_P
+      direction: output
+      net: HDMI1_TX1_P
+    - number: 154
+      name: HDMI1_TX1_N
+      direction: output
+      net: HDMI1_TX1_N
+    - number: 158
+      name: HDMI1_TX0_P
+      direction: output
+      net: HDMI1_TX0_P
+    - number: 160
+      name: HDMI1_TX0_N
+      direction: output
+      net: HDMI1_TX0_N
+    - number: 164
+      name: HDMI1_CLK_P
+      direction: output
+      net: HDMI1_CLK_P
+    - number: 166
+      name: HDMI1_CLK_N
+      direction: output
+      net: HDMI1_CLK_N
+
+    - number: 151
+      name: HDMI0_CEC
+      direction: bidirectional
+      net: HDMI0_CEC
+      description: "HDMI0 CEC. Internally pulled up 27 kΩ. 5 V tolerant."
+    - number: 153
+      name: HDMI0_HOTPLUG
+      direction: input
+      net: HDMI0_HPD
+      description: "HDMI0 hotplug detect. Internally pulled down 100 kΩ. 5 V tolerant."
+    - number: 170
+      name: HDMI0_TX2_P
+      direction: output
+      net: HDMI0_TX2_P
+    - number: 172
+      name: HDMI0_TX2_N
+      direction: output
+      net: HDMI0_TX2_N
+    - number: 176
+      name: HDMI0_TX1_P
+      direction: output
+      net: HDMI0_TX1_P
+    - number: 178
+      name: HDMI0_TX1_N
+      direction: output
+      net: HDMI0_TX1_N
+    - number: 182
+      name: HDMI0_TX0_P
+      direction: output
+      net: HDMI0_TX0_P
+    - number: 184
+      name: HDMI0_TX0_N
+      direction: output
+      net: HDMI0_TX0_N
+    - number: 188
+      name: HDMI0_CLK_P
+      direction: output
+      net: HDMI0_CLK_P
+    - number: 190
+      name: HDMI0_CLK_N
+      direction: output
+      net: HDMI0_CLK_N
+    - number: 199
+      name: HDMI0_SDA
+      direction: bidirectional
+      net: HDMI0_SDA
+      description: "HDMI0 DDC data. Internally pulled up 1.8 kΩ. 5 V tolerant."
+    - number: 200
+      name: HDMI0_SCL
+      direction: bidirectional
+      net: HDMI0_SCL
+      description: "HDMI0 DDC clock. Internally pulled up 1.8 kΩ. 5 V tolerant."
+
+    - number: 157
+      name: DSI0_D0_N
+      direction: output
+      net: DSI0_D0_N
+    - number: 159
+      name: DSI0_D0_P
+      direction: output
+      net: DSI0_D0_P
+    - number: 163
+      name: DSI0_D1_N
+      direction: output
+      net: DSI0_D1_N
+    - number: 165
+      name: DSI0_D1_P
+      direction: output
+      net: DSI0_D1_P
+    - number: 169
+      name: DSI0_C_N
+      direction: output
+      net: DSI0_CLK_N
+    - number: 171
+      name: DSI0_C_P
+      direction: output
+      net: DSI0_CLK_P
+
+    - number: 175
+      name: DSI1_D0_N
+      direction: output
+      net: DSI1_D0_N
+    - number: 177
+      name: DSI1_D0_P
+      direction: output
+      net: DSI1_D0_P
+    - number: 181
+      name: DSI1_D1_N
+      direction: output
+      net: DSI1_D1_N
+    - number: 183
+      name: DSI1_D1_P
+      direction: output
+      net: DSI1_D1_P
+    - number: 187
+      name: DSI1_C_N
+      direction: output
+      net: DSI1_CLK_N
+    - number: 189
+      name: DSI1_C_P
+      direction: output
+      net: DSI1_CLK_P
+    - number: 193
+      name: DSI1_D2_N
+      direction: output
+      net: DSI1_D2_N
+    - number: 194
+      name: DSI1_D3_N
+      direction: output
+      net: DSI1_D3_N
+    - number: 195
+      name: DSI1_D2_P
+      direction: output
+      net: DSI1_D2_P
+    - number: 196
+      name: DSI1_D3_P
+      direction: output
+      net: DSI1_D3_P
+
+  interfaces:
+    - type: Ethernet
+      pins:
+        pair0_p: Ethernet_Pair0_P
+        pair0_n: Ethernet_Pair0_N
+        pair1_p: Ethernet_Pair1_P
+        pair1_n: Ethernet_Pair1_N
+        pair2_p: Ethernet_Pair2_P
+        pair2_n: Ethernet_Pair2_N
+        pair3_p: Ethernet_Pair3_P
+        pair3_n: Ethernet_Pair3_N
+
+    - type: USB
+      speed_max: { value: 480, unit: Mbps }
+      pins:
+        dp: USB_P
+        dm: USB_N
+        id: USB_OTG_ID
+
+    - type: I2C
+      instance: 0
+      pins:
+        sda: SDA0
+        scl: SCL0
+
+    - type: SPI
+      instance: 0
+      pins:
+        cs0: GPIO8
+        miso: GPIO9
+        mosi: GPIO10
+        sclk: GPIO11
+
+    - type: UART
+      instance: 0
+      pins:
+        tx: GPIO14
+        rx: GPIO15
+
+    - type: SDIO
+      instance: 0
+      pins:
+        clk: SD_CLK
+        cmd: SD_CMD
+        d0: SD_DAT0
+        d1: SD_DAT1
+        d2: SD_DAT2
+        d3: SD_DAT3

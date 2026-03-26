@@ -1,0 +1,85 @@
+$schema: "https://github.com/mageoch/silicai/schema/component.schema.json"
+$schema_version: "0.1.0"
+
+component:
+  mpn: KPC357NT
+  manufacturer: Cosmo Electronics
+  category: discrete
+  package: SOP-4
+  datasheet: "http://www.cosmo-ic.com"
+
+  description: >
+    4-pin Mini-Flat phototransistor photocoupler. DC-input single channel
+    with LED optically coupled to an NPN phototransistor. Isolation voltage
+    3750 Vrms. CTR min 50% at IF=5mA, VCE=5V.
+
+  temperature_range:
+    operating:
+      min: { value: -55, unit: "°C" }
+      max: { value: 115, unit: "°C" }
+    storage:
+      min: { value: -55, unit: "°C" }
+      max: { value: 125, unit: "°C" }
+
+  absolute_maximum_ratings:
+    - parameter: forward_current
+      pins: [A]
+      unit: mA
+      max: 50
+    - parameter: peak_forward_current
+      pins: [A]
+      unit: A
+      max: 1
+    - parameter: reverse_voltage
+      pins: [A, K]
+      unit: V
+      max: 6
+    - parameter: input_power_dissipation
+      pins: [A, K]
+      unit: mW
+      max: 70
+    - parameter: collector_emitter_voltage
+      pins: [C, E]
+      unit: V
+      max: 80
+    - parameter: emitter_collector_voltage
+      pins: [E, C]
+      unit: V
+      max: 5
+    - parameter: collector_current
+      pins: [C]
+      unit: mA
+      max: 50
+    - parameter: collector_power_dissipation
+      pins: [C]
+      unit: mW
+      max: 150
+    - parameter: total_power_dissipation
+      pins: [A, K, C, E]
+      unit: mW
+      max: 170
+    - parameter: isolation_voltage
+      pins: [A, K, C, E]
+      unit: Vrms
+      max: 3750
+
+  pins:
+    - number: 1
+      name: A
+      direction: passive
+      description: "LED Anode (input side)"
+
+    - number: 2
+      name: K
+      direction: passive
+      description: "LED Cathode (input side)"
+
+    - number: 3
+      name: E
+      direction: open_emitter
+      description: "Phototransistor Emitter (output side)"
+
+    - number: 4
+      name: C
+      direction: open_collector
+      description: "Phototransistor Collector (output side)"

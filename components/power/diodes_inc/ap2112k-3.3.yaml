@@ -8,6 +8,7 @@ component:
   package: SOT-23-5
   datasheet: "https://www.diodes.com/assets/Datasheets/AP2112.pdf"
   kicad_symbol: "Regulator_Linear:AP2112K-3.3"
+  remark: "Thermal resistance Θja=250°C/W measured in still air."
 
   absolute_maximum_ratings:
     - parameter: input_voltage
@@ -42,7 +43,8 @@ component:
     - parameter: dropout_voltage
       pins: [VIN, VOUT]
       unit: mV
-      nom: 340   # at 600 mA load
+      nom: 340
+      remark: "at 600 mA load"
 
   temperature_range:
     operating:
@@ -52,7 +54,7 @@ component:
       min: { value: -65, unit: °C }
       max: { value: 150, unit: °C }
     junction_max:          { value: 125, unit: °C }
-    thermal_resistance_ja: { value: 250, unit: °C/W }   # SOT-23-5, still air
+    thermal_resistance_ja: { value: 250, unit: °C/W }
 
   power_consumption:
     - mode: enabled
@@ -99,7 +101,8 @@ component:
       required_external:
         - type: resistor
           resistance: { value: 100, unit: kΩ }
-          to: VIN   # pull EN high by default to enable the regulator
+          to: VIN
+          remark: "pull EN high by default to enable the regulator"
 
     - number: 4
       name: NC

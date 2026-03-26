@@ -1,0 +1,136 @@
+$schema: "https://github.com/mageoch/silicai/schema/component.schema.json"
+$schema_version: "0.1.0"
+
+component:
+  mpn: TPD4E001DCKR
+  manufacturer: Texas Instruments
+  category: discrete
+  package: SC-70-6
+  datasheet: "https://www.ti.com/lit/ds/symlink/tpd4e001.pdf"
+  kicad_symbol: "Protection:TPD4E001DCKR"
+
+  temperature_range:
+    operating:
+      min: { value: -40, unit: °C }
+      max: { value: 85, unit: °C }
+    storage:
+      min: { value: -65, unit: °C }
+      max: { value: 150, unit: °C }
+    junction_max:          { value: 150, unit: °C }
+    thermal_resistance_ja: { value: 251.1, unit: °C/W }
+
+  power_consumption:
+    - mode: standby
+      description: "Normal operation, no ESD event"
+      rail: vcc
+      current: { value: 1, unit: nA }
+      current_max: { value: 100, unit: nA }
+      conditions: "VCC=5V, no ESD event"
+
+  absolute_maximum_ratings:
+    - parameter: supply_voltage
+      pins: [VCC]
+      unit: V
+      min: -0.3
+      max: 7
+    - parameter: io_voltage
+      pins: [IO1, IO2, IO3, IO4]
+      unit: V
+      min: -0.3
+      max_ref: "VCC + 0.3"
+    - parameter: peak_surge_current
+      pins: [IO1, IO2, IO3, IO4]
+      unit: A
+      max: 5.5
+      conditions: "IEC 61000-4-5, T_P=8/20µs"
+    - parameter: peak_surge_power
+      pins: [IO1, IO2, IO3, IO4]
+      unit: W
+      max: 100
+      conditions: "IEC 61000-4-5, T_P=8/20µs"
+    - parameter: junction_temperature
+      pins: [VCC, IO1, IO2, IO3, IO4, GND]
+      unit: °C
+      max: 150
+    - parameter: storage_temperature
+      pins: [VCC, IO1, IO2, IO3, IO4, GND]
+      unit: °C
+      min: -65
+      max: 150
+
+  recommended_operating_conditions:
+    - parameter: supply_voltage
+      pins: [VCC]
+      unit: V
+      min: 0.9
+      max: 5.5
+    - parameter: io_voltage
+      pins: [IO1, IO2, IO3, IO4]
+      unit: V
+      min: 0
+      max_ref: VCC
+
+  esd_ratings:
+    - standard: IEC_61000-4-2
+      level: 4
+      contact_discharge: { value: 8, unit: kV }
+      air_gap_discharge: { value: 15, unit: kV }
+    - standard: JEDEC_HBM
+      pins: "IO1, IO3, IO4, IO6 (DCK)"
+      value: { value: 15, unit: kV }
+    - standard: JEDEC_CDM
+      pins: all
+      value: { value: 1, unit: kV }
+
+  rails:
+    - id: vcc
+      net: VCC
+      per_pin_decoupling:
+        - type: capacitor
+          capacitance: { value: 100, unit: nF }
+          voltage_rating: { value: 10, unit: V }
+          dielectric: [X5R, X7R]
+          placement: close
+
+  pins:
+    - number: 1
+      name: IO1
+      direction: bidirectional
+      primary_function:
+        type: analog_in
+      description: "ESD-protected channel 1. Place as close to connector as possible."
+
+    - number: 2
+      name: GND
+      direction: power_in
+      net: GND
+
+    - number: 3
+      name: IO2
+      direction: bidirectional
+      primary_function:
+        type: analog_in
+      description: "ESD-protected channel 2."
+
+    - number: 4
+      name: IO3
+      direction: bidirectional
+      primary_function:
+        type: analog_in
+      description: "ESD-protected channel 3."
+
+    - number: 5
+      name: VCC
+      direction: power_in
+      rail: vcc
+      description: >
+        Power-supply input. Bypass VCC to GND with a 0.1 µF ceramic capacitor.
+        Can be left unconnected to system supply to tolerate higher signal swing
+        up to 10V; still connect 0.1 µF bypass capacitor in that case.
+
+    - number: 6
+      name: IO4
+      direction: bidirectional
+      primary_function:
+        type: analog_in
+      description: "ESD-protected channel 4."

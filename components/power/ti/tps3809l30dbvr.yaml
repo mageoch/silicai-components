@@ -1,0 +1,102 @@
+$schema: "https://github.com/mageoch/silicai/schema/component.schema.json"
+$schema_version: "0.1.0"
+
+component:
+  mpn: TPS3809L30DBVR
+  manufacturer: Texas Instruments
+  category: power_ic
+  package: SOT-23-3
+  datasheet: "https://www.ti.com/lit/ds/symlink/tps3809l30.pdf"
+  kicad_symbol: "Supervisor_Reset:TPS3809x30"
+  remark: "Thermal derating: 3.5 mW/°C above 25°C (DBV/SOT-23-5 package)."
+
+  temperature_range:
+    operating:
+      min: { value: -40, unit: °C }
+      max: { value: 85, unit: °C }
+    storage:
+      min: { value: -65, unit: °C }
+      max: { value: 150, unit: °C }
+    thermal_resistance_ja: { value: 286, unit: °C/W }
+
+  power_consumption:
+    - mode: active
+      description: "Monitoring supply voltage, output unconnected"
+      rail: vdd
+      current: { value: 9, unit: µA }
+      current_max: { value: 12, unit: µA }
+      conditions: "VDD=2V, output unconnected"
+    - mode: active_high_vdd
+      description: "Monitoring supply voltage at high VDD"
+      rail: vdd
+      current: { value: 20, unit: µA }
+      current_max: { value: 25, unit: µA }
+      conditions: "VDD=6V, output unconnected"
+
+  absolute_maximum_ratings:
+    - parameter: supply_voltage
+      pins: [VDD]
+      unit: V
+      max: 6.5
+    - parameter: all_other_pins
+      pins: [GND, RESET]
+      unit: V
+      min: -0.3
+      max: 6.5
+    - parameter: output_current_low
+      pins: [RESET]
+      unit: mA
+      max: 5
+    - parameter: output_current_high
+      pins: [RESET]
+      unit: mA
+      min: -5
+
+  recommended_operating_conditions:
+    - parameter: supply_voltage
+      pins: [VDD]
+      unit: V
+      min: 2
+      max: 6
+    - parameter: reset_current_sink_startup
+      pins: [RESET]
+      unit: µA
+      max: 50
+
+  rails:
+    - id: vdd
+      net: VDD
+      per_pin_decoupling:
+        - type: capacitor
+          capacitance: { value: 100, unit: nF }
+          voltage_rating: { value: 10, unit: V }
+          dielectric: [X5R, X7R]
+          placement: close
+
+  pins:
+    - number: 1
+      name: GND
+      direction: power_in
+      net: GND
+
+    - number: 2
+      name: RESET
+      direction: output
+      primary_function:
+        type: reset
+        polarity: active_low
+      description: >
+        Active-low push-pull output. Asserts (low) when VDD falls below V_IT threshold.
+        Deasserts (high) after a 200 ms delay once VDD rises above V_IT.
+      remark: "V_OL_max=0.3V at VDD=2–6V, I_OL=500µA; V_OH_min=VDD–0.4V at I_OH=2mA"
+      electrical:
+        v_ol_max: { value: 0.3, unit: V }
+        v_oh_min_ref: VDD
+
+    - number: 3
+      name: VDD
+      direction: power_in
+      rail: vdd
+      description: >
+        Supply voltage pin. Connect 0.1 µF ceramic capacitor from this pin to GND
+        to improve threshold voltage stability.

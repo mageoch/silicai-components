@@ -1,0 +1,346 @@
+$schema: "https://github.com/mageoch/silicai/schema/component.schema.json"
+$schema_version: "0.1.0"
+
+component:
+  mpn: THVD4411DR
+  manufacturer: Texas Instruments
+  category: logic
+  package: VQFN-24
+  datasheet: "https://www.ti.com/lit/ds/symlink/thvd4411.pdf"
+  kicad_symbol: "Interface_RS485:THVD4411"
+
+  temperature_range:
+    operating:
+      min: { value: -40, unit: °C }
+      max: { value: 125, unit: °C }
+    storage:
+      min: { value: -65, unit: °C }
+      max: { value: 150, unit: °C }
+    junction_max:          { value: 170, unit: °C }
+    thermal_resistance_ja: { value: 32.3, unit: °C/W }
+
+  power_consumption:
+    - mode: shutdown
+      description: "Device disabled via SHDN pin (active low)"
+      rail: vcc
+      current: { value: 10, unit: µA }
+      current_max: { value: 20, unit: µA }
+      conditions: "VCC=4.5V to 5.5V, SHDN=GND, no bus load, TA<=125°C"
+    - mode: active_rs485_full_duplex
+      description: "RS-485 full duplex, driver and receiver enabled"
+      rail: vcc
+      current: { value: 1.7, unit: mA }
+      current_max: { value: 3.4, unit: mA }
+      conditions: "VCC=4.5V to 5.5V, MODE1=MODE0=1, DIR=VIO, no load"
+    - mode: active_rs485_half_duplex
+      description: "RS-485 half duplex, driver enabled, receiver disabled"
+      rail: vcc
+      current: { value: 1.3, unit: mA }
+      current_max: { value: 2.8, unit: mA }
+      conditions: "VCC=4.5V to 5.5V, MODE1=MODE0=1, MODE1=1 MODE0=0, DIR=VIO, no load"
+    - mode: active_rs232
+      description: "RS-232 mode, driver and receiver active"
+      rail: vcc
+      current: { value: 2.5, unit: mA }
+      current_max: { value: 3.8, unit: mA }
+      conditions: "VCC=VIO=5.5V, MODE1=MODE0=01, SHDN=VIO, no load"
+
+  absolute_maximum_ratings:
+    - parameter: supply_voltage
+      pins: ["VCC"]
+      unit: V
+      min: -0.5
+      max: 6
+    - parameter: logic_supply_voltage
+      pins: ["VIO"]
+      unit: V
+      min: -0.5
+      max: 6
+    - parameter: bus_voltage
+      pins: ["R1", "R2", "R3", "R4"]
+      unit: V
+      min: -16
+      max: 16
+    - parameter: differential_bus_voltage
+      pins: ["R1", "R2", "R3", "R4"]
+      unit: V
+      min: -22
+      max: 22
+    - parameter: logic_input_voltage
+      pins: ["L2", "SLR", "SHDN", "TERM_TX", "TERM_RX", "MODE0", "MODE1", "DIR"]
+      unit: V
+      min: -0.3
+      max: 5.7
+    - parameter: receiver_output_current
+      pins: ["L1"]
+      unit: mA
+      min: -8
+      max: 8
+    - parameter: junction_temperature
+      pins: []
+      unit: °C
+      min: -40
+      max: 170
+    - parameter: storage_temperature
+      pins: []
+      unit: °C
+      min: -65
+      max: 150
+
+  recommended_operating_conditions:
+    - parameter: supply_voltage
+      pins: ["VCC"]
+      unit: V
+      min: 3
+      max: 5.5
+    - parameter: logic_supply_voltage
+      pins: ["VIO"]
+      unit: V
+      min: 1.65
+      max: 5.5
+    - parameter: rs485_bus_input_voltage
+      pins: ["R1", "R2", "R3", "R4"]
+      unit: V
+      min: -7
+      max: 12
+    - parameter: rs232_receiver_input_voltage
+      pins: ["R2"]
+      unit: V
+      min: -15
+      max: 15
+    - parameter: operating_temperature
+      pins: []
+      unit: °C
+      min: -40
+      max: 125
+
+  rails:
+    - id: vcc
+      net: VCC_5V
+      per_pin_decoupling:
+        - type: capacitor
+          capacitance: { value: 100, unit: nF }
+          voltage_rating: { value: 10, unit: V }
+          dielectric: [X5R, X7R]
+          placement: close
+      bulk_decoupling:
+        - type: capacitor
+          capacitance: { value: 10, unit: µF }
+          voltage_rating: { value: 10, unit: V }
+          dielectric: [X5R, X7R]
+          placement: nearby
+    - id: vio
+      net: VCC_3V3
+      per_pin_decoupling:
+        - type: capacitor
+          capacitance: { value: 100, unit: nF }
+          voltage_rating: { value: 10, unit: V }
+          dielectric: [X5R, X7R]
+          placement: close
+
+  pins:
+    - number: 1
+      name: "V+"
+      direction: power_out
+      net: CHARGE_PUMP_VPLUS
+      required_external:
+        - type: capacitor
+          capacitance: { value: 100, unit: nF }
+          voltage_rating: { value: 16, unit: V }
+          from: "V+"
+          to: "V-"
+          scope: component
+
+    - number: 2
+      name: VCC
+      direction: power_in
+      must_connect: true
+      rail: vcc
+
+    - number: 3
+      name: L1
+      direction: output
+      primary_function:
+        type: uart_rx
+      electrical:
+        v_oh_min: { multiplier: 0.8, reference: VIO }
+        v_ol_max: { value: 0.4, unit: V }
+
+    - number: 4
+      name: L2
+      direction: input
+      primary_function:
+        type: uart_tx
+      electrical:
+        v_ih_min: { multiplier: 0.7, reference: VIO }
+        v_il_max: { multiplier: 0.3, reference: VIO }
+
+    - number: 5
+      name: SLR
+      direction: input
+      must_connect: true
+      primary_function:
+        type: enable
+      electrical:
+        v_ih_min: { multiplier: 0.7, reference: VIO }
+        v_il_max: { multiplier: 0.3, reference: VIO }
+
+    - number: 6
+      name: DIR
+      direction: input
+      must_connect: true
+      primary_function:
+        type: enable
+      electrical:
+        v_ih_min: { multiplier: 0.7, reference: VIO }
+        v_il_max: { multiplier: 0.3, reference: VIO }
+
+    - number: 7
+      name: MODE0
+      direction: input
+      must_connect: true
+      primary_function:
+        type: gpio
+      electrical:
+        v_ih_min: { multiplier: 0.7, reference: VIO }
+        v_il_max: { multiplier: 0.3, reference: VIO }
+
+    - number: 8
+      name: MODE1
+      direction: input
+      must_connect: true
+      primary_function:
+        type: gpio
+      electrical:
+        v_ih_min: { multiplier: 0.7, reference: VIO }
+        v_il_max: { multiplier: 0.3, reference: VIO }
+
+    - number: 9
+      name: VIO
+      direction: power_in
+      must_connect: true
+      rail: vio
+
+    - number: 10
+      name: TERM_TX
+      direction: input
+      primary_function:
+        type: enable
+      electrical:
+        v_ih_min: { multiplier: 0.7, reference: VIO }
+        v_il_max: { multiplier: 0.3, reference: VIO }
+
+    - number: 11
+      name: TERM_RX
+      direction: input
+      primary_function:
+        type: enable
+      electrical:
+        v_ih_min: { multiplier: 0.7, reference: VIO }
+        v_il_max: { multiplier: 0.3, reference: VIO }
+
+    - number: 12
+      name: SHDN
+      direction: input
+      must_connect: true
+      primary_function:
+        type: enable
+        polarity: active_low
+      electrical:
+        v_ih_min: { multiplier: 0.7, reference: VIO }
+        v_il_max: { multiplier: 0.3, reference: VIO }
+      required_external:
+        - type: resistor
+          resistance: { value: 100, unit: kΩ }
+          from: SHDN
+          to: VCC_3V3
+          scope: component
+
+    - number: 13
+      name: R4
+      direction: bidirectional
+      primary_function:
+        type: differential_pair
+      electrical:
+        v_max: { value: 12, unit: V }
+        v_min: { value: -7, unit: V }
+
+    - number: 14
+      name: R3
+      direction: bidirectional
+      primary_function:
+        type: differential_pair
+      electrical:
+        v_max: { value: 12, unit: V }
+        v_min: { value: -7, unit: V }
+
+    - number: 15
+      name: GND
+      direction: power_in
+      must_connect: true
+      net: GND
+
+    - number: 16
+      name: GND
+      direction: power_in
+      must_connect: true
+      net: GND
+
+    - number: 17
+      name: R2
+      direction: bidirectional
+      primary_function:
+        type: differential_pair
+      electrical:
+        v_max: { value: 12, unit: V }
+        v_min: { value: -7, unit: V }
+
+    - number: 18
+      name: R1
+      direction: bidirectional
+      primary_function:
+        type: differential_pair
+      electrical:
+        v_max: { value: 12, unit: V }
+        v_min: { value: -7, unit: V }
+
+    - number: 19
+      name: VCC
+      direction: power_in
+      must_connect: true
+      rail: vcc
+
+    - number: 20
+      name: "V-"
+      direction: power_out
+      net: CHARGE_PUMP_VMINUS
+
+    - number: 21
+      name: "C2-"
+      direction: passive
+      required_external:
+        - type: capacitor
+          capacitance: { value: 100, unit: nF }
+          voltage_rating: { value: 16, unit: V }
+          from: "C2+"
+          to: "C2-"
+          scope: component
+
+    - number: 22
+      name: "C1-"
+      direction: passive
+      required_external:
+        - type: capacitor
+          capacitance: { value: 100, unit: nF }
+          voltage_rating: { value: 16, unit: V }
+          from: "C1+"
+          to: "C1-"
+          scope: component
+
+    - number: 23
+      name: "C1+"
+      direction: passive
+
+    - number: 24
+      name: "C2+"
+      direction: passive

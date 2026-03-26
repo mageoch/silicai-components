@@ -1,0 +1,144 @@
+$schema: "https://github.com/mageoch/silicai/schema/component.schema.json"
+$schema_version: "0.1.0"
+
+component:
+  mpn: HR911196AE
+  manufacturer: HanRun Electronics
+  category: connector
+  package: RJ45-THT-20pin
+  datasheet: "http://www.hanrun.com"
+
+  description: >
+    1x1 port Tab-UP RJ45 connector with integrated magnetics and dual LED
+    for 10/100/1000Base-TX PoE applications. Supports 57VDC 600mA per centre
+    tap (30W with 2 taps, 60W with 4 taps). 1500Vrms isolation. Turns ratio
+    1CT:1CT ±5%. Meets IEEE 802.3at.
+
+  temperature_range:
+    operating:
+      min: { value: -40, unit: "°C" }
+      max: { value: 85, unit: "°C" }
+
+  absolute_maximum_ratings:
+    - parameter: isolation_voltage
+      pins: ["11", "10", "12", "4", "5", "6", "3", "2", "1", "8", "9", "7"]
+      unit: Vrms
+      max: 1500
+    - parameter: poe_centre_tap_voltage
+      pins: ["13", "14", "15", "16", "12", "6", "1", "7"]
+      unit: V
+      max: 57
+    - parameter: poe_centre_tap_current
+      pins: ["13", "14", "15", "16", "12", "6", "1", "7"]
+      unit: mA
+      max: 600
+    - parameter: led_forward_current
+      pins: ["17", "18", "19", "20"]
+      unit: mA
+      max: 20
+
+  pins:
+    - number: 11
+      name: MD1+
+      direction: passive
+      description: "Magnetics pair 1 positive, chip side (TX/RX+)"
+
+    - number: 12
+      name: MDCT1
+      direction: passive
+      description: "Magnetics pair 1 centre tap, chip side (PoE)"
+
+    - number: 10
+      name: MD1-
+      direction: passive
+      description: "Magnetics pair 1 negative, chip side (TX/RX-)"
+
+    - number: 4
+      name: MD2+
+      direction: passive
+      description: "Magnetics pair 2 positive, chip side"
+
+    - number: 6
+      name: MDCT2
+      direction: passive
+      description: "Magnetics pair 2 centre tap, chip side (PoE)"
+
+    - number: 5
+      name: MD2-
+      direction: passive
+      description: "Magnetics pair 2 negative, chip side"
+
+    - number: 3
+      name: MD3+
+      direction: passive
+      description: "Magnetics pair 3 positive, chip side"
+
+    - number: 1
+      name: MDCT3
+      direction: passive
+      description: "Magnetics pair 3 centre tap, chip side (PoE)"
+
+    - number: 2
+      name: MD3-
+      direction: passive
+      description: "Magnetics pair 3 negative, chip side"
+
+    - number: 8
+      name: MD4+
+      direction: passive
+      description: "Magnetics pair 4 positive, chip side"
+
+    - number: 7
+      name: MDCT4
+      direction: passive
+      description: "Magnetics pair 4 centre tap, chip side (PoE)"
+
+    - number: 9
+      name: MD4-
+      direction: passive
+      description: "Magnetics pair 4 negative, chip side"
+
+    - number: 13
+      name: VDC1+
+      direction: passive
+      description: "PoE DC centre tap, positive pair A"
+
+    - number: 14
+      name: VDC1-
+      direction: passive
+      description: "PoE DC centre tap, negative pair A"
+
+    - number: 15
+      name: VDC2+
+      direction: passive
+      description: "PoE DC centre tap, positive pair B"
+
+    - number: 16
+      name: VDC2-
+      direction: passive
+      description: "PoE DC centre tap, negative pair B"
+
+    - number: 17
+      name: LED_GRN_A
+      direction: passive
+      description: "Green LED anode"
+
+    - number: 18
+      name: LED_GRN_K
+      direction: passive
+      description: "Green LED cathode"
+
+    - number: 19
+      name: LED_YEL_A
+      direction: passive
+      description: "Yellow LED anode"
+
+    - number: 20
+      name: LED_YEL_K
+      direction: passive
+      description: "Yellow/Green LED cathode"
+
+    - number: Shield
+      name: SHIELD
+      direction: passive
+      description: "Chassis/shield ground, connect to earth or PCB shield plane"
