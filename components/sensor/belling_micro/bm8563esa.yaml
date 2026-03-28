@@ -101,12 +101,6 @@ component:
   rails:
     - id: vdd
       net: VCC
-      per_pin_decoupling:
-        - type: capacitor
-          capacitance: { value: 100, unit: nF }
-          voltage_rating: { value: 10, unit: V }
-          dielectric: [X5R, X7R]
-          placement: close
 
   pins:
     - number: 1
@@ -198,6 +192,12 @@ component:
       name: VDD
       direction: power_in
       rail: vdd
+      decoupling:
+        - type: capacitor
+          capacitance: { value: 100, unit: nF }
+          voltage_rating: { value: 10, unit: V }
+          dielectric: [X5R, X7R]
+          placement: close
 
   interfaces:
     - type: I2C

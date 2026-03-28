@@ -78,12 +78,6 @@ component:
   rails:
     - id: vplus
       net: VCC_3V3
-      per_pin_decoupling:
-        - type: capacitor
-          capacitance: { value: 100, unit: nF }
-          voltage_rating: { value: 10, unit: V }
-          dielectric: [X5R, X7R]
-          placement: close
 
   pins:
     - number: 1
@@ -143,6 +137,12 @@ component:
       name: "V+"
       direction: power_in
       rail: vplus
+      decoupling:
+        - type: capacitor
+          capacitance: { value: 100, unit: nF }
+          voltage_rating: { value: 10, unit: V }
+          dielectric: [X5R, X7R]
+          placement: close
 
     - number: 6
       name: SDA

@@ -85,12 +85,6 @@ component:
   rails:
     - id: vcc
       net: VCC
-      per_pin_decoupling:
-        - type: capacitor
-          capacitance: { value: 100, unit: nF }
-          voltage_rating: { value: 10, unit: V }
-          dielectric: [X5R, X7R]
-          placement: close
 
   pins:
     - number: 1
@@ -123,6 +117,12 @@ component:
       name: VCC
       direction: power_in
       rail: vcc
+      decoupling:
+        - type: capacitor
+          capacitance: { value: 100, unit: nF }
+          voltage_rating: { value: 10, unit: V }
+          dielectric: [X5R, X7R]
+          placement: close
       description: >
         Power-supply input. Bypass VCC to GND with a 0.1 µF ceramic capacitor.
         Can be left unconnected to system supply to tolerate higher signal swing

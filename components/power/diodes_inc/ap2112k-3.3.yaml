@@ -73,18 +73,18 @@ component:
   rails:
     - id: vin
       net: VIN
-      per_pin_decoupling:
-        - type: capacitor
-          capacitance: { value: 1000, unit: nF }
-          voltage_rating: { value: 10, unit: V }
-          dielectric: [X5R, X7R]
-          placement: close
 
   pins:
     - number: 1
       name: VIN
       direction: power_in
       rail: vin
+      decoupling:
+        - type: capacitor
+          capacitance: { value: 1000, unit: nF }
+          voltage_rating: { value: 10, unit: V }
+          dielectric: [X5R, X7R]
+          placement: close
 
     - number: 2
       name: GND

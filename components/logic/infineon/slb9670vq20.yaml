@@ -102,13 +102,6 @@ component:
   rails:
     - id: vdd
       net: VDD_3V3
-      per_pin_decoupling:
-        - type: capacitor
-          capacitance: { value: 100, unit: nF }
-          voltage_rating: { value: 10, unit: V }
-          dielectric: [X5R, X7R]
-          placement: close
-          remark: "Place 2x 100 nF capacitors close to each VDD/GND pin pair"
       bulk_decoupling:
         - type: capacitor
           capacitance: { value: 1, unit: µF }
@@ -169,6 +162,13 @@ component:
       direction: power_in
       must_connect: true
       rail: vdd
+      decoupling:
+        - type: capacitor
+          capacitance: { value: 100, unit: nF }
+          voltage_rating: { value: 10, unit: V }
+          dielectric: [X5R, X7R]
+          placement: close
+          remark: "Place 2x 100 nF capacitors close to each VDD/GND pin pair"
 
     - number: 9
       name: "GND"
@@ -276,6 +276,13 @@ component:
       direction: power_in
       must_connect: true
       rail: vdd
+      decoupling:
+        - type: capacitor
+          capacitance: { value: 100, unit: nF }
+          voltage_rating: { value: 10, unit: V }
+          dielectric: [X5R, X7R]
+          placement: close
+          remark: "Place 2x 100 nF capacitors close to each VDD/GND pin pair"
 
     - number: 23
       name: "GND"

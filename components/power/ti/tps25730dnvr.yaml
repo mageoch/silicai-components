@@ -166,53 +166,18 @@ component:
   rails:
     - id: vin_3v3
       net: VIN_3V3
-      per_pin_decoupling:
-        - type: capacitor
-          capacitance: { value: 10, unit: µF }
-          voltage_rating: { value: 6.3, unit: V }
-          dielectric: [X5R, X7R]
-          placement: close
-          note: "Recommended 5–10 µF on VIN_3V3. Use derating: if 50% at voltage, double the value."
 
     - id: ldo_3v3
       net: LDO_3V3
-      per_pin_decoupling:
-        - type: capacitor
-          capacitance: { value: 10, unit: µF }
-          voltage_rating: { value: 6.3, unit: V }
-          dielectric: [X5R, X7R]
-          placement: close
-          note: "Recommended 5–25 µF on LDO_3V3."
 
     - id: ldo_1v5
       net: LDO_1V5
-      per_pin_decoupling:
-        - type: capacitor
-          capacitance: { value: 10, unit: µF }
-          voltage_rating: { value: 4, unit: V }
-          dielectric: [X5R, X7R]
-          placement: close
-          note: "Recommended 4.5–12 µF on LDO_1V5. Internal use only — do not load externally."
 
     - id: vbus
       net: VBUS
-      per_pin_decoupling:
-        - type: capacitor
-          capacitance: { value: 4.7, unit: µF }
-          voltage_rating: { value: 25, unit: V }
-          dielectric: [X5R, X7R]
-          placement: close
-          note: "Recommended 1–10 µF on VBUS. All VBUS and VBUS_IN pins must be shorted together."
 
     - id: pphv
       net: PPHV
-      per_pin_decoupling:
-        - type: capacitor
-          capacitance: { value: 47, unit: µF }
-          voltage_rating: { value: 25, unit: V }
-          dielectric: [X5R, X7R]
-          placement: close
-          note: "Recommended 47–100 µF bulk capacitance on PPHV (sink from VBUS). USB PD cSnkBulkPd max 100 µF."
 
   pins:
     - number: 38
@@ -220,6 +185,13 @@ component:
       direction: power_in
       must_connect: true
       rail: vin_3v3
+      decoupling:
+        - type: capacitor
+          capacitance: { value: 10, unit: µF }
+          voltage_rating: { value: 6.3, unit: V }
+          dielectric: [X5R, X7R]
+          placement: close
+          note: "Recommended 5–10 µF on VIN_3V3. Use derating: if 50% at voltage, double the value."
       description: >
         Supply for core circuitry and I/O. Bypass with capacitance C_VIN_3V3 to GND.
         Operating range 3.0–3.6 V.
@@ -228,6 +200,13 @@ component:
       name: LDO_3V3
       direction: power_out
       rail: ldo_3v3
+      decoupling:
+        - type: capacitor
+          capacitance: { value: 10, unit: µF }
+          voltage_rating: { value: 6.3, unit: V }
+          dielectric: [X5R, X7R]
+          placement: close
+          note: "Recommended 5–25 µF on LDO_3V3."
       description: >
         Output of supply switched from VIN_3V3 or VBUS LDO. Bypass with capacitance
         C_LDO_3V3 to GND. Typical 3.4 V. Cannot drive heavy external loads.
@@ -236,6 +215,13 @@ component:
       name: LDO_1V5
       direction: power_out
       rail: ldo_1v5
+      decoupling:
+        - type: capacitor
+          capacitance: { value: 10, unit: µF }
+          voltage_rating: { value: 4, unit: V }
+          dielectric: [X5R, X7R]
+          placement: close
+          note: "Recommended 4.5–12 µF on LDO_1V5. Internal use only — do not load externally."
       description: >
         Output of the core LDO. Bypass with capacitance C_LDO_1V5 to GND.
         This pin cannot source current to external circuits.
@@ -244,30 +230,65 @@ component:
       name: VBUS_IN_A
       direction: power_in
       rail: vbus
+      decoupling:
+        - type: capacitor
+          capacitance: { value: 4.7, unit: µF }
+          voltage_rating: { value: 25, unit: V }
+          dielectric: [X5R, X7R]
+          placement: close
+          note: "Recommended 1–10 µF on VBUS. All VBUS and VBUS_IN pins must be shorted together."
       description: "5 V to 20 V VBUS input. All VBUS_IN pins must be shorted together on the PCB."
 
     - number: 24
       name: VBUS_IN_B
       direction: power_in
       rail: vbus
+      decoupling:
+        - type: capacitor
+          capacitance: { value: 4.7, unit: µF }
+          voltage_rating: { value: 25, unit: V }
+          dielectric: [X5R, X7R]
+          placement: close
+          note: "Recommended 1–10 µF on VBUS. All VBUS and VBUS_IN pins must be shorted together."
       description: "5 V to 20 V VBUS input. All VBUS_IN pins must be shorted together on the PCB."
 
     - number: 25
       name: VBUS_IN_C
       direction: power_in
       rail: vbus
+      decoupling:
+        - type: capacitor
+          capacitance: { value: 4.7, unit: µF }
+          voltage_rating: { value: 25, unit: V }
+          dielectric: [X5R, X7R]
+          placement: close
+          note: "Recommended 1–10 µF on VBUS. All VBUS and VBUS_IN pins must be shorted together."
       description: "5 V to 20 V VBUS input. All VBUS_IN pins must be shorted together on the PCB."
 
     - number: 32
       name: VBUS_A
       direction: power_in
       rail: vbus
+      decoupling:
+        - type: capacitor
+          capacitance: { value: 4.7, unit: µF }
+          voltage_rating: { value: 25, unit: V }
+          dielectric: [X5R, X7R]
+          placement: close
+          note: "Recommended 1–10 µF on VBUS. All VBUS and VBUS_IN pins must be shorted together."
       description: "VBUS input to LDO. Bypass with capacitance C_VBUS to GND."
 
     - number: 33
       name: VBUS_B
       direction: power_in
       rail: vbus
+      decoupling:
+        - type: capacitor
+          capacitance: { value: 4.7, unit: µF }
+          voltage_rating: { value: 25, unit: V }
+          dielectric: [X5R, X7R]
+          placement: close
+          note: "Recommended 1–10 µF on VBUS. All VBUS and VBUS_IN pins must be shorted together."
       description: "VBUS input to LDO. Bypass with capacitance C_VBUS to GND."
 
     - number: 20

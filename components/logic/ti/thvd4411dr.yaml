@@ -117,12 +117,6 @@ component:
   rails:
     - id: vcc
       net: VCC_5V
-      per_pin_decoupling:
-        - type: capacitor
-          capacitance: { value: 100, unit: nF }
-          voltage_rating: { value: 10, unit: V }
-          dielectric: [X5R, X7R]
-          placement: close
       bulk_decoupling:
         - type: capacitor
           capacitance: { value: 10, unit: µF }
@@ -131,12 +125,6 @@ component:
           placement: nearby
     - id: vio
       net: VCC_3V3
-      per_pin_decoupling:
-        - type: capacitor
-          capacitance: { value: 100, unit: nF }
-          voltage_rating: { value: 10, unit: V }
-          dielectric: [X5R, X7R]
-          placement: close
 
   pins:
     - number: 1
@@ -156,6 +144,12 @@ component:
       direction: power_in
       must_connect: true
       rail: vcc
+      decoupling:
+        - type: capacitor
+          capacitance: { value: 100, unit: nF }
+          voltage_rating: { value: 10, unit: V }
+          dielectric: [X5R, X7R]
+          placement: close
 
     - number: 3
       name: L1
@@ -220,6 +214,12 @@ component:
       direction: power_in
       must_connect: true
       rail: vio
+      decoupling:
+        - type: capacitor
+          capacitance: { value: 100, unit: nF }
+          voltage_rating: { value: 10, unit: V }
+          dielectric: [X5R, X7R]
+          placement: close
 
     - number: 10
       name: TERM_TX
@@ -309,6 +309,12 @@ component:
       direction: power_in
       must_connect: true
       rail: vcc
+      decoupling:
+        - type: capacitor
+          capacitance: { value: 100, unit: nF }
+          voltage_rating: { value: 10, unit: V }
+          dielectric: [X5R, X7R]
+          placement: close
 
     - number: 20
       name: "V-"
