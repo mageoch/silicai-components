@@ -863,6 +863,9 @@ component:
       pins:
         dp: USB_DP
         dm: USB_DM
+      routing:
+        differential_impedance: { value: 90, unit: Ω }
+        length_mismatch_max: { value: 2.54, unit: mm }
 
     - type: SPI
       instance: 2
