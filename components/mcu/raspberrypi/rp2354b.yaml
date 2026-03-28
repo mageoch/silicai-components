@@ -143,9 +143,23 @@ component:
 
     - id: vreg_avdd
       net: VREG_AVDD
-      description: >
-        Voltage regulator analogue supply (nominally 3.3 V). Noise sensitive; use RC filter:
-        33 Ω in series with 4.7 µF from the 3.3 V rail to VREG_AVDD.
+      description: "Voltage regulator analogue supply (nominally 3.3 V). Noise sensitive; RC-filtered from VREG_VIN."
+      input_filter:
+        - type: resistor
+          resistance: { value: 33, unit: Ω }
+          from: VREG_VIN
+          to: VREG_AVDD
+          placement: close
+          scope: component
+          remark: "Series element of RC low-pass filter between +3V3 and VREG_AVDD"
+        - type: capacitor
+          capacitance: { value: 4700, unit: nF }
+          voltage_rating: { value: 10, unit: V }
+          dielectric: [X5R, X7R]
+          from: VREG_AVDD
+          to: GND
+          placement: close
+          remark: "Shunt element of RC low-pass filter; VREG_AVDD to GND"
 
   pins:
     # — IOVDD (8 pins) —
@@ -255,18 +269,10 @@ component:
       rail: dvdd
       decoupling:
         - type: capacitor
-          capacitance: { value: 100, unit: nF }
-          voltage_rating: { value: 10, unit: V }
-          dielectric: [X5R, X7R]
-          placement: close
-      required_external:
-        - type: capacitor
           capacitance: { value: 4700, unit: nF }
           voltage_rating: { value: 10, unit: V }
           dielectric: [X5R, X7R]
-          to: GND
           placement: close
-          scope: component
           remark: "Far DVDD pin; use 4.7 µF as recommended by Raspberry Pi design guide"
 
     - number: 51
@@ -329,21 +335,6 @@ component:
       name: VREG_AVDD
       direction: power_in
       rail: vreg_avdd
-      required_external:
-        - type: resistor
-          resistance: { value: 33, unit: Ω }
-          to: VREG_VIN
-          placement: close
-          scope: component
-          remark: "Series resistor of RC low-pass filter for VREG_AVDD noise isolation"
-        - type: capacitor
-          capacitance: { value: 4700, unit: nF }
-          voltage_rating: { value: 10, unit: V }
-          dielectric: [X5R, X7R]
-          to: GND
-          placement: close
-          scope: component
-          remark: "Shunt capacitor of RC filter from +3V3 to VREG_AVDD"
 
     - number: 62
       name: VREG_PGND
