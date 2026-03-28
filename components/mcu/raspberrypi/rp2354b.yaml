@@ -140,6 +140,12 @@ component:
     - id: vreg_vin
       net: VREG_VIN
       description: "On-chip voltage regulator input (2.7–5.5 V, nominally 3.3 V)"
+      bulk_decoupling:
+        - type: capacitor
+          capacitance: { value: 4700, unit: nF }
+          voltage_rating: { value: 10, unit: V }
+          dielectric: [X5R, X7R]
+          placement: close
 
     - id: vreg_avdd
       net: VREG_AVDD
@@ -324,12 +330,6 @@ component:
       name: VREG_VIN
       direction: power_in
       rail: vreg_vin
-      decoupling:
-        - type: capacitor
-          capacitance: { value: 4700, unit: nF }
-          voltage_rating: { value: 10, unit: V }
-          dielectric: [X5R, X7R]
-          placement: close
 
     - number: 61
       name: VREG_AVDD
