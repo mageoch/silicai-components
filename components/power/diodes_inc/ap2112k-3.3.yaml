@@ -98,8 +98,9 @@ component:
       primary_function:
         type: enable
         polarity: active_high
-      required_external:
+      externals:
         - type: resistor
+          required: true
           resistance: { value: 100, unit: kΩ }
           to: VIN
           remark: "pull EN high by default to enable the regulator"
@@ -112,8 +113,9 @@ component:
       name: VOUT
       direction: power_out
       net: +3V3
-      required_external:
+      externals:
         - type: capacitor
+          required: true
           capacitance: { value: 1000, unit: nF }
           to: GND
           voltage_rating: { value: 10, unit: V }

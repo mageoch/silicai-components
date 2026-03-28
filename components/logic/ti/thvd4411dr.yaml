@@ -131,8 +131,9 @@ component:
       name: "V+"
       direction: power_out
       net: CHARGE_PUMP_VPLUS
-      required_external:
+      externals:
         - type: capacitor
+          required: true
           capacitance: { value: 100, unit: nF }
           voltage_rating: { value: 16, unit: V }
           from: "V+"
@@ -249,8 +250,9 @@ component:
       electrical:
         v_ih_min: { multiplier: 0.7, reference: VIO }
         v_il_max: { multiplier: 0.3, reference: VIO }
-      required_external:
+      externals:
         - type: resistor
+          required: true
           resistance: { value: 100, unit: kΩ }
           from: SHDN
           to: VCC_3V3
@@ -324,8 +326,9 @@ component:
     - number: 21
       name: "C2-"
       direction: passive
-      required_external:
+      externals:
         - type: capacitor
+          required: true
           capacitance: { value: 100, unit: nF }
           voltage_rating: { value: 16, unit: V }
           from: "C2+"
@@ -335,8 +338,9 @@ component:
     - number: 22
       name: "C1-"
       direction: passive
-      required_external:
+      externals:
         - type: capacitor
+          required: true
           capacitance: { value: 100, unit: nF }
           voltage_rating: { value: 16, unit: V }
           from: "C1+"

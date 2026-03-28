@@ -235,8 +235,9 @@ component:
           voltage_rating: { value: 10, unit: V }
           dielectric: [X5R, X7R]
           placement: close
-      required_external:
+      externals:
         - type: capacitor
+          required: true
           capacitance: { value: 4700, unit: nF }
           voltage_rating: { value: 10, unit: V }
           dielectric: [X5R, X7R]
@@ -304,14 +305,16 @@ component:
       name: VREG_AVDD
       direction: power_in
       rail: vreg_avdd
-      required_external:
+      externals:
         - type: resistor
+          required: true
           resistance: { value: 33, unit: Ω }
           to: VREG_VIN
           placement: close
           scope: component
           remark: "Series resistor of RC low-pass filter for VREG_AVDD noise isolation"
         - type: capacitor
+          required: true
           capacitance: { value: 4700, unit: nF }
           voltage_rating: { value: 10, unit: V }
           dielectric: [X5R, X7R]
@@ -329,8 +332,9 @@ component:
       name: VREG_LX
       direction: passive
       net: VREG_LX
-      required_external:
+      externals:
         - type: inductor
+          required: true
           inductance: { value: 3300, unit: nH }
           to: DVDD
           placement: close
@@ -341,8 +345,9 @@ component:
       name: VREG_FB
       direction: input
       net: VREG_FB
-      required_external:
+      externals:
         - type: capacitor
+          required: true
           capacitance: { value: 4700, unit: nF }
           voltage_rating: { value: 10, unit: V }
           dielectric: [X5R, X7R]
@@ -362,8 +367,9 @@ component:
       net: XIN
       primary_function:
         type: clock_in
-      required_external:
+      externals:
         - type: crystal
+          required: true
           to: XOUT
           placement: close
           scope: component
@@ -379,8 +385,9 @@ component:
       direction: bidirectional
       primary_function:
         type: usb_dp
-      required_external:
+      externals:
         - type: resistor
+          required: true
           resistance: { value: 27, unit: Ω }
           to: USB_D+
           placement: close
@@ -392,8 +399,9 @@ component:
       direction: bidirectional
       primary_function:
         type: usb_dm
-      required_external:
+      externals:
         - type: resistor
+          required: true
           resistance: { value: 27, unit: Ω }
           to: USB_D-
           placement: close
@@ -405,8 +413,9 @@ component:
       direction: input
       primary_function:
         type: swd_clk
-      required_external:
+      externals:
         - type: resistor
+          required: true
           resistance: { value: 10, unit: kΩ }
           to: GND
           scope: component
@@ -417,8 +426,9 @@ component:
       direction: bidirectional
       primary_function:
         type: swd_io
-      required_external:
+      externals:
         - type: resistor
+          required: true
           resistance: { value: 10, unit: kΩ }
           to: IOVDD
           scope: component
@@ -431,8 +441,9 @@ component:
       primary_function:
         type: reset
         polarity: active_low
-      required_external:
+      externals:
         - type: resistor
+          required: true
           resistance: { value: 10, unit: kΩ }
           to: IOVDD
           scope: component
@@ -473,8 +484,9 @@ component:
       primary_function:
         type: spi_cs
       net: QSPI_SS
-      required_external:
+      externals:
         - type: resistor
+          required: true
           resistance: { value: 10, unit: kΩ }
           to: QSPI_IOVDD
           scope: component

@@ -380,8 +380,9 @@ component:
       net: XIN
       primary_function:
         type: clock_in
-      required_external:
+      externals:
         - type: crystal
+          required: true
           frequency: { value: 12, unit: MHz }
           frequency_tolerance: { value: 30, unit: ppm }
           load_capacitance: { value: 10, unit: pF }
@@ -392,6 +393,7 @@ component:
           scope: component
           remark: "Keep layout short to minimise parasitic capacitance (~3pF assumed from PCB traces)."
         - type: capacitor
+          required: true
           capacitance: { value: 15, unit: pF }
           to: GND
           placement: close
@@ -402,8 +404,9 @@ component:
       name: XOUT
       direction: passive
       net: XOUT
-      required_external:
+      externals:
         - type: resistor
+          required: true
           resistance: { value: 1, unit: kΩ }
           to: XIN
           placement: close
@@ -411,6 +414,7 @@ component:
           condition: "IOVDD=3.3V"
           remark: "Limits crystal drive current to prevent over-driving. Must be re-tuned for IOVDD other than 3.3V."
         - type: capacitor
+          required: true
           capacitance: { value: 15, unit: pF }
           to: GND
           placement: close
@@ -423,8 +427,9 @@ component:
       direction: input
       primary_function:
         type: swd_clk
-      required_external:
+      externals:
         - type: resistor
+          required: true
           resistance: { value: 10, unit: kΩ }
           to: GND
           scope: component
@@ -435,8 +440,9 @@ component:
       direction: bidirectional
       primary_function:
         type: swd_io
-      required_external:
+      externals:
         - type: resistor
+          required: true
           resistance: { value: 10, unit: kΩ }
           to: IOVDD
           scope: component
@@ -449,12 +455,23 @@ component:
       primary_function:
         type: reset
         polarity: active_low
-      required_external:
+      externals:
         - type: resistor
+          required: true
           resistance: { value: 10, unit: kΩ }
           to: IOVDD
           scope: component
           remark: "Pull RUN high (to IOVDD) via 10 kΩ for normal operation; drive low to hold chip in reset"
+        - type: resistor
+          resistance: { value: 1, unit: kΩ }
+          from: RUN
+          to: RUN_BTN
+          placement: close
+          remark: "Current-limiting series resistor for reset button"
+        - type: switch
+          from: RUN_BTN
+          to: GND
+          remark: "Momentary SPST; pull RUN low to reset the chip"
 
     # — USB —
     - number: 66
@@ -462,8 +479,9 @@ component:
       direction: bidirectional
       primary_function:
         type: usb_dm
-      required_external:
+      externals:
         - type: resistor
+          required: true
           resistance: { value: 27, unit: Ω }
           to: USB_D-
           placement: close
@@ -475,8 +493,9 @@ component:
       direction: bidirectional
       primary_function:
         type: usb_dp
-      required_external:
+      externals:
         - type: resistor
+          required: true
           resistance: { value: 27, unit: Ω }
           to: USB_D+
           placement: close
@@ -519,12 +538,23 @@ component:
       primary_function:
         type: spi_cs
       net: QSPI_SS
-      required_external:
+      externals:
         - type: resistor
+          required: true
           resistance: { value: 10, unit: kΩ }
           to: QSPI_IOVDD
           scope: component
           remark: "QSPI_SS has internal pull-up; also serves as BOOTSEL — hold low at reset to enter USB boot mode"
+        - type: resistor
+          resistance: { value: 1, unit: kΩ }
+          from: QSPI_SS
+          to: BOOTSEL_BTN
+          placement: close
+          remark: "Current-limiting series resistor for BOOTSEL button"
+        - type: switch
+          from: BOOTSEL_BTN
+          to: GND
+          remark: "Momentary SPST; pull BOOTSEL low at reset to enter USB boot mode"
 
     # — GPIO0–GPIO3 (bottom-left corner) —
     - number: 77

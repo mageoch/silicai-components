@@ -330,8 +330,9 @@ component:
       description: >
         CC1 I/O for USB Type-C. Filter noise with recommended capacitor (200–480 pF) to GND.
         Used for cable attach detection, orientation, and USB PD BMC communication.
-      required_external:
+      externals:
         - type: capacitor
+          required: true
           capacitance: { value: 400, unit: pF }
           from: CC1
           to: GND
@@ -346,8 +347,9 @@ component:
       description: >
         CC2 I/O for USB Type-C. Filter noise with recommended capacitor (200–480 pF) to GND.
         Used for cable attach detection, orientation, and USB PD BMC communication.
-      required_external:
+      externals:
         - type: capacitor
+          required: true
           capacitance: { value: 400, unit: pF }
           from: CC2
           to: GND
@@ -363,8 +365,9 @@ component:
         I2C target serial clock input. Tie to pullup voltage through a resistor.
         May be grounded if unused. Supports standard (100 kHz), fast (400 kHz),
         and fast-plus (800 kHz) modes.
-      required_external:
+      externals:
         - type: resistor
+          required: true
           resistance: { value: 4.7, unit: kΩ }
           from: I2Ct_SCL
           to: LDO_3V3
@@ -379,8 +382,9 @@ component:
       description: >
         I2C target serial data open-drain input/output. Tie to pullup voltage through a
         resistor. May be grounded if unused.
-      required_external:
+      externals:
         - type: resistor
+          required: true
           resistance: { value: 4.7, unit: kΩ }
           from: I2Ct_SDA
           to: LDO_3V3

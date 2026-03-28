@@ -112,8 +112,9 @@ component:
             i2c_address: "0x48"
           - connect_to: SCL
             i2c_address: "0x4C"
-      required_external:
+      externals:
         - type: resistor
+          required: true
           resistance: { value: 10, unit: kΩ }
           from: A1
           to: GND
@@ -134,8 +135,9 @@ component:
             i2c_address: "0x42"
           - connect_to: SCL
             i2c_address: "0x43"
-      required_external:
+      externals:
         - type: resistor
+          required: true
           resistance: { value: 10, unit: kΩ }
           from: A0
           to: GND
@@ -150,8 +152,9 @@ component:
         polarity: active_low
       electrical:
         v_ol_max: { value: 0.4, unit: V }
-      required_external:
+      externals:
         - type: resistor
+          required: true
           resistance: { value: 10, unit: kΩ }
           from: Alert
           to: VCC_3V3
@@ -167,8 +170,9 @@ component:
         v_ih_min: { multiplier: 0.7, reference: VS }
         v_il_max: { multiplier: 0.3, reference: VS }
         v_ol_max: { value: 0.4, unit: V }
-      required_external:
+      externals:
         - type: resistor
+          required: true
           resistance: { value: 4.7, unit: kΩ }
           from: SDA
           to: VCC_3V3
@@ -183,8 +187,9 @@ component:
       electrical:
         v_ih_min: { multiplier: 0.7, reference: VS }
         v_il_max: { multiplier: 0.3, reference: VS }
-      required_external:
+      externals:
         - type: resistor
+          required: true
           resistance: { value: 4.7, unit: kΩ }
           from: SCL
           to: VCC_3V3
@@ -220,8 +225,9 @@ component:
       direction: input
       primary_function:
         type: analog_in
-      required_external:
+      externals:
         - type: resistor
+          required: true
           resistance: { value: 10, unit: mΩ }
           from: "IN+"
           to: "IN-"

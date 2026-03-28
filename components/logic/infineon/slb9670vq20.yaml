@@ -230,8 +230,9 @@ component:
       electrical:
         v_oh_min: { multiplier: 0.9, reference: VDD }
         v_ol_max: { value: 0.33, unit: V }
-      required_external:
+      externals:
         - type: resistor
+          required: true
           resistance: { value: 10, unit: kΩ }
           from: PIRQ#
           to: VDD_3V3

@@ -74,8 +74,9 @@ component:
         type: interrupt
         polarity: active_low
       description: "Interrupt output, open-drain, active LOW. Triggered by alarm, timer, or periodic time update."
-      required_external:
+      externals:
         - type: resistor
+          required: true
           resistance: { value: 10, unit: kΩ }
           from: "/INT"
           to: VCC
@@ -90,8 +91,9 @@ component:
       electrical:
         v_ih_min: { multiplier: 0.7, reference: VDD }
         v_il_max: { multiplier: 0.3, reference: VDD }
-      required_external:
+      externals:
         - type: resistor
+          required: true
           resistance: { value: 4.7, unit: kΩ }
           from: SCL
           to: VCC
@@ -107,8 +109,9 @@ component:
       electrical:
         v_ih_min: { multiplier: 0.7, reference: VDD }
         v_il_max: { multiplier: 0.3, reference: VDD }
-      required_external:
+      externals:
         - type: resistor
+          required: true
           resistance: { value: 4.7, unit: kΩ }
           from: SDA
           to: VCC

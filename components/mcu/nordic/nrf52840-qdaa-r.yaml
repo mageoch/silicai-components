@@ -202,8 +202,9 @@ component:
       direction: passive
       net: DEC1
       remark: "Internal LDO/regulator output node; bypass capacitor must be placed as close as possible to the ball."
-      required_external:
+      externals:
         - type: capacitor
+          required: true
           capacitance: { value: 100, unit: nF }
           to: GND
           placement: close
@@ -212,8 +213,9 @@ component:
       name: DEC2
       direction: passive
       net: DEC2
-      required_external:
+      externals:
         - type: capacitor
+          required: true
           capacitance: { value: 100, unit: nF }
           to: GND
           placement: close
@@ -222,8 +224,9 @@ component:
       name: DEC3
       direction: passive
       net: DEC3
-      required_external:
+      externals:
         - type: capacitor
+          required: true
           capacitance: { value: 100, unit: nF }
           to: GND
           placement: close
@@ -232,8 +235,9 @@ component:
       name: DEC4
       direction: passive
       net: DEC4
-      required_external:
+      externals:
         - type: capacitor
+          required: true
           capacitance: { value: 100, unit: nF }
           to: GND
           placement: close
@@ -242,8 +246,9 @@ component:
       name: DEC5
       direction: passive
       net: DEC5
-      required_external:
+      externals:
         - type: capacitor
+          required: true
           capacitance: { value: 100, unit: nF }
           to: GND
           placement: close
@@ -252,8 +257,9 @@ component:
       name: DEC6
       direction: passive
       net: DEC6
-      required_external:
+      externals:
         - type: capacitor
+          required: true
           capacitance: { value: 100, unit: nF }
           to: GND
           placement: close
@@ -262,12 +268,14 @@ component:
       name: DECUSB
       direction: passive
       net: DECUSB
-      required_external:
+      externals:
         - type: capacitor
+          required: true
           capacitance: { value: 4700, unit: nF }
           to: GND
           placement: close
         - type: capacitor
+          required: true
           capacitance: { value: 100, unit: nF }
           to: GND
           placement: close
@@ -277,8 +285,9 @@ component:
       direction: passive
       net: XL1
       remark: "32 MHz crystal: place between XL1 and XL2 with 12 pF load capacitors to GND on each pin."
-      required_external:
+      externals:
         - type: capacitor
+          required: true
           capacitance: { value: 12, unit: pF }
           to: GND
 
@@ -286,8 +295,9 @@ component:
       name: XL2
       direction: passive
       net: XL2
-      required_external:
+      externals:
         - type: capacitor
+          required: true
           capacitance: { value: 12, unit: pF }
           to: GND
 
@@ -296,8 +306,9 @@ component:
       direction: input
       net: XC1
       remark: "32.768 kHz crystal: place between XC1 and XC2 with 12 pF load capacitors to GND on each pin."
-      required_external:
+      externals:
         - type: capacitor
+          required: true
           capacitance: { value: 12, unit: pF }
           to: GND
 
@@ -305,8 +316,9 @@ component:
       name: XC2
       direction: input
       net: XC2
-      required_external:
+      externals:
         - type: capacitor
+          required: true
           capacitance: { value: 12, unit: pF }
           to: GND
 
@@ -315,8 +327,9 @@ component:
       direction: bidirectional
       primary_function:
         type: swd_io
-      required_external:
+      externals:
         - type: resistor
+          required: true
           resistance: { value: 10, unit: kΩ }
           to: VDD
 
@@ -325,8 +338,9 @@ component:
       direction: input
       primary_function:
         type: swd_clk
-      required_external:
+      externals:
         - type: resistor
+          required: true
           resistance: { value: 10, unit: kΩ }
           to: GND
 
@@ -367,11 +381,13 @@ component:
       primary_function:
         type: reset
         polarity: active_low
-      required_external:
+      externals:
         - type: resistor
+          required: true
           resistance: { value: 10, unit: kΩ }
           to: VDD
         - type: capacitor
+          required: true
           capacitance: { value: 100, unit: nF }
           to: GND
 

@@ -178,8 +178,9 @@ component:
       electrical:
         v_ih_min: { multiplier: 0.7, reference: VCC }
         v_il_max: { multiplier: 0.3, reference: VCC }
-      required_external:
+      externals:
         - type: resistor
+          required: true
           resistance: { value: 10, unit: kΩ }
           from: RESET
           to: VCC_3V3
@@ -195,8 +196,9 @@ component:
       electrical:
         v_oh_min: { multiplier: 0.8, reference: VCC }
         v_ol_max: { value: 0.4, unit: V }
-      required_external:
+      externals:
         - type: resistor
+          required: true
           resistance: { value: 10, unit: kΩ }
           from: IRQ
           to: VCC_3V3

@@ -104,8 +104,9 @@ component:
       electrical:
         v_ol_max: { value: 0.4, unit: V }
         i_ol_max: { value: 3, unit: mA }
-      required_external:
+      externals:
         - type: resistor
+          required: true
           resistance: { value: 10, unit: kΩ }
           from: ALERT
           to: VCC_3V3
@@ -126,8 +127,9 @@ component:
             i2c_address: "0x4A"
           - connect_to: SCL
             i2c_address: "0x4B"
-      required_external:
+      externals:
         - type: resistor
+          required: true
           resistance: { value: 10, unit: kΩ }
           from: ADD0
           to: GND
