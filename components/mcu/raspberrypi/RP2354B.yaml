@@ -303,10 +303,12 @@ component:
       required_external:
         - type: inductor
           inductance: { value: 3300, unit: nH }
+          recommended_mpn: AOTA-B201610S3R3-101-T
+          package: "0806"
           to: DVDD
           placement: close
           scope: component
-          remark: "3.3 µH shielded inductor between VREG_LX and DVDD output (Cin 4.7 µF to GND, Cout 4.7 µF to GND)"
+          remark: "Shielded inductor; inductor orientation matters — magnetic field from a wrong-way-round part interferes with the output capacitor and upsets the regulator. Abracon part ships on tape with consistent orientation."
 
     - number: 65
       name: VREG_FB
@@ -336,15 +338,40 @@ component:
         type: clock_in
       required_external:
         - type: crystal
+          frequency: { value: 12, unit: MHz }
+          frequency_tolerance: { value: 30, unit: ppm }
+          load_capacitance: { value: 10, unit: pF }
+          esr: { value: 50, unit: Ω }
+          recommended_mpn: ABM8-272-T3
           to: XOUT
           placement: close
           scope: component
-          remark: "12 MHz crystal between XIN and XOUT; load capacitors per crystal spec (typically 12–18 pF to GND)"
+          remark: "Keep layout short to minimise parasitic capacitance (~3pF assumed from PCB traces)."
+        - type: capacitor
+          capacitance: { value: 15, unit: pF }
+          to: GND
+          placement: close
+          scope: component
+          remark: "Load cap on XIN side (C3). C3/2 + ~3pF PCB parasitic ≈ 10.5pF, matching 10pF crystal spec."
 
     - number: 31
       name: XOUT
       direction: passive
       net: XOUT
+      required_external:
+        - type: resistor
+          resistance: { value: 1, unit: kΩ }
+          to: XIN
+          placement: close
+          scope: component
+          condition: "IOVDD=3.3V"
+          remark: "Limits crystal drive current to prevent over-driving. Must be re-tuned for IOVDD other than 3.3V."
+        - type: capacitor
+          capacitance: { value: 15, unit: pF }
+          to: GND
+          placement: close
+          scope: component
+          remark: "Load cap on XOUT side (C4)."
 
     # — Debug / control —
     - number: 33
