@@ -135,8 +135,9 @@ component:
           recommended_mpn: AOTA-B201610S3R3-101-T
           package: "0806"
           placement: close
+          orientation: "dot (winding-start) towards DVDD / VREG_FB side"
           scope: component
-          remark: "Shielded inductor; orientation matters — wrong-way-round part lets its magnetic field interfere with the output capacitor and upsets the regulator. Abracon part ships on tape with consistent orientation."
+          remark: "Abracon part ships on tape with consistent orientation; wrong-way-round part's field interferes with the output capacitor and upsets the regulator."
         - type: capacitor
           capacitance: { value: 4700, unit: nF }
           voltage_rating: { value: 10, unit: V }
