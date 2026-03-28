@@ -63,20 +63,9 @@ component:
     - id: v5
       net: V5
       description: "5V or 3.3V bus power input. Bypass with 1µF or larger capacitor."
-      per_pin_decoupling:
-        - type: capacitor
-          capacitance: { value: 1, unit: µF }
-          placement: close
     - id: vdd33
       net: VDD33
       description: "3.3V main power rail. LDO output when powered from V5=5V, or direct 3.3V input. Bypass with 0.1µF + 10µF."
-      per_pin_decoupling:
-        - type: capacitor
-          capacitance: { value: 100, unit: nF }
-          placement: close
-        - type: capacitor
-          capacitance: { value: 10, unit: µF }
-          placement: close
 
   pins:
     - number: 1
@@ -108,6 +97,13 @@ component:
       name: VDD33
       direction: power_in
       rail: vdd33
+      decoupling:
+        - type: capacitor
+          capacitance: { value: 100, unit: nF }
+          placement: close
+        - type: capacitor
+          capacitance: { value: 10, unit: µF }
+          placement: close
       description: "3.3V main power supply. LDO output when V5=5V input. Bypass with 0.1µF + 10µF."
 
     - number: 7
@@ -174,6 +170,10 @@ component:
       name: V5
       direction: power_in
       rail: v5
+      decoupling:
+        - type: capacitor
+          capacitance: { value: 1, unit: µF }
+          placement: close
       description: "5V or 3.3V bus power input. Bypass with 1µF or larger capacitor."
 
     - number: 20

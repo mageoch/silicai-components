@@ -79,12 +79,6 @@ component:
     - id: vdd_5v
       net: "+5V"
       description: "Main 5 V supply input. Multiple pins must all be connected."
-      per_pin_decoupling:
-        - type: capacitor
-          capacitance: { value: 100, unit: nF }
-          voltage_rating: { value: 10, unit: V }
-          dielectric: [X5R, X7R]
-          placement: close
     - id: vdd_3v3
       net: CM4_3V3
       description: "On-module 3.3 V regulated output; max 600 mA total across both pins"
@@ -436,36 +430,72 @@ component:
       direction: power_in
       rail: vdd_5v
       net: "+5V"
+      decoupling:
+        - type: capacitor
+          capacitance: { value: 100, unit: nF }
+          voltage_rating: { value: 10, unit: V }
+          dielectric: [X5R, X7R]
+          placement: close
       description: "4.75–5.25 V main power input"
     - number: 79
       name: "+5V_79"
       direction: power_in
       rail: vdd_5v
       net: "+5V"
+      decoupling:
+        - type: capacitor
+          capacitance: { value: 100, unit: nF }
+          voltage_rating: { value: 10, unit: V }
+          dielectric: [X5R, X7R]
+          placement: close
       description: "4.75–5.25 V main power input"
     - number: 81
       name: "+5V_81"
       direction: power_in
       rail: vdd_5v
       net: "+5V"
+      decoupling:
+        - type: capacitor
+          capacitance: { value: 100, unit: nF }
+          voltage_rating: { value: 10, unit: V }
+          dielectric: [X5R, X7R]
+          placement: close
       description: "4.75–5.25 V main power input"
     - number: 83
       name: "+5V_83"
       direction: power_in
       rail: vdd_5v
       net: "+5V"
+      decoupling:
+        - type: capacitor
+          capacitance: { value: 100, unit: nF }
+          voltage_rating: { value: 10, unit: V }
+          dielectric: [X5R, X7R]
+          placement: close
       description: "4.75–5.25 V main power input"
     - number: 85
       name: "+5V_85"
       direction: power_in
       rail: vdd_5v
       net: "+5V"
+      decoupling:
+        - type: capacitor
+          capacitance: { value: 100, unit: nF }
+          voltage_rating: { value: 10, unit: V }
+          dielectric: [X5R, X7R]
+          placement: close
       description: "4.75–5.25 V main power input"
     - number: 87
       name: "+5V_87"
       direction: power_in
       rail: vdd_5v
       net: "+5V"
+      decoupling:
+        - type: capacitor
+          capacitance: { value: 100, unit: nF }
+          voltage_rating: { value: 10, unit: V }
+          dielectric: [X5R, X7R]
+          placement: close
       description: "4.75–5.25 V main power input"
 
     - number: 78

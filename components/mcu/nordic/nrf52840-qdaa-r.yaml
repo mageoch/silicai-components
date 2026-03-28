@@ -88,64 +88,88 @@ component:
   rails:
     - id: vdd
       net: VDD
-      per_pin_decoupling:
-        - type: capacitor
-          capacitance: { value: 100, unit: nF }
-          voltage_rating: { value: 10, unit: V }
-          dielectric: [X5R, X7R]
-          placement: close
     - id: vddh
       net: VDDH
-      per_pin_decoupling:
-        - type: capacitor
-          capacitance: { value: 100, unit: nF }
-          voltage_rating: { value: 10, unit: V }
-          dielectric: [X5R, X7R]
-          placement: close
     - id: vbus
       net: VBUS
-      per_pin_decoupling:
-        - type: capacitor
-          capacitance: { value: 4700, unit: nF }
-          voltage_rating: { value: 10, unit: V }
-          dielectric: [X5R, X7R]
-          placement: close
 
   pins:
     - number: B1
       name: VDD
       direction: power_in
       rail: vdd
+      decoupling:
+        - type: capacitor
+          capacitance: { value: 100, unit: nF }
+          voltage_rating: { value: 10, unit: V }
+          dielectric: [X5R, X7R]
+          placement: close
 
     - number: A22
       name: VDD
       direction: passive
       rail: vdd
+      decoupling:
+        - type: capacitor
+          capacitance: { value: 100, unit: nF }
+          voltage_rating: { value: 10, unit: V }
+          dielectric: [X5R, X7R]
+          placement: close
 
     - number: AD14
       name: VDD
       direction: passive
       rail: vdd
+      decoupling:
+        - type: capacitor
+          capacitance: { value: 100, unit: nF }
+          voltage_rating: { value: 10, unit: V }
+          dielectric: [X5R, X7R]
+          placement: close
 
     - number: AD23
       name: VDD
       direction: passive
       rail: vdd
+      decoupling:
+        - type: capacitor
+          capacitance: { value: 100, unit: nF }
+          voltage_rating: { value: 10, unit: V }
+          dielectric: [X5R, X7R]
+          placement: close
 
     - number: W1
       name: VDD
       direction: passive
       rail: vdd
+      decoupling:
+        - type: capacitor
+          capacitance: { value: 100, unit: nF }
+          voltage_rating: { value: 10, unit: V }
+          dielectric: [X5R, X7R]
+          placement: close
 
     - number: Y2
       name: VDDH
       direction: power_in
       rail: vddh
+      decoupling:
+        - type: capacitor
+          capacitance: { value: 100, unit: nF }
+          voltage_rating: { value: 10, unit: V }
+          dielectric: [X5R, X7R]
+          placement: close
 
     - number: AD2
       name: VBUS
       direction: power_in
       rail: vbus
+      decoupling:
+        - type: capacitor
+          capacitance: { value: 4700, unit: nF }
+          voltage_rating: { value: 10, unit: V }
+          dielectric: [X5R, X7R]
+          placement: close
 
     - number: B7
       name: VSS

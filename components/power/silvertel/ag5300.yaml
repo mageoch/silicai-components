@@ -114,14 +114,6 @@ component:
     - id: vout
       net: +VDC
       description: "Regulated 12V DC output"
-      per_pin_decoupling:
-        - type: capacitor
-          capacitance: { value: 470, unit: µF }
-          voltage_rating: { value: 16, unit: V }
-          placement: close
-          description: >
-            Required for output stability and load step response.
-            Electrolytic type; use low-ESR if ambient temperature below 0°C.
 
   pins:
     - number: 1
@@ -182,6 +174,14 @@ component:
       name: +VDC
       direction: power_out
       rail: vout
+      decoupling:
+        - type: capacitor
+          capacitance: { value: 470, unit: µF }
+          voltage_rating: { value: 16, unit: V }
+          placement: close
+          description: >
+            Required for output stability and load step response.
+            Electrolytic type; use low-ESR if ambient temperature below 0°C.
       description: >
         Positive DC Output. Provides the positive regulated 12V DC output.
         Connect a 470µF 16V electrolytic capacitor from this pin to -VDC

@@ -95,12 +95,6 @@ component:
   rails:
     - id: vs
       net: VCC_3V3
-      per_pin_decoupling:
-        - type: capacitor
-          capacitance: { value: 100, unit: nF }
-          voltage_rating: { value: 10, unit: V }
-          dielectric: [X5R, X7R]
-          placement: close
 
   pins:
     - number: 1
@@ -201,6 +195,12 @@ component:
       direction: power_in
       must_connect: true
       rail: vs
+      decoupling:
+        - type: capacitor
+          capacitance: { value: 100, unit: nF }
+          voltage_rating: { value: 10, unit: V }
+          dielectric: [X5R, X7R]
+          placement: close
 
     - number: 7
       name: GND

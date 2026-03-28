@@ -54,21 +54,9 @@ component:
   rails:
     - id: vdd
       net: VCC
-      per_pin_decoupling:
-        - type: capacitor
-          capacitance: { value: 100, unit: nF }
-          voltage_rating: { value: 10, unit: V }
-          dielectric: [X5R, X7R]
-          placement: close
     - id: vbackup
       net: VBACKUP
       description: "Backup supply rail. Connect to coin cell, supercapacitor, or rechargeable cell via trickle charger."
-      per_pin_decoupling:
-        - type: capacitor
-          capacitance: { value: 100, unit: nF }
-          voltage_rating: { value: 10, unit: V }
-          dielectric: [X5R, X7R]
-          placement: close
 
   pins:
     - number: 1
@@ -136,12 +124,24 @@ component:
       name: VBACKUP
       direction: power_in
       rail: vbackup
+      decoupling:
+        - type: capacitor
+          capacitance: { value: 100, unit: nF }
+          voltage_rating: { value: 10, unit: V }
+          dielectric: [X5R, X7R]
+          placement: close
       description: "Backup supply voltage. Supports automatic switchover from VDD. Connect to coin cell or supercapacitor. Trickle charger available for rechargeable backup sources."
 
     - number: 7
       name: VDD
       direction: power_in
       rail: vdd
+      decoupling:
+        - type: capacitor
+          capacitance: { value: 100, unit: nF }
+          voltage_rating: { value: 10, unit: V }
+          dielectric: [X5R, X7R]
+          placement: close
       description: "Main power supply, 1.1V to 5.5V (timekeeping), 1.2V to 5.5V (I2C active)."
 
     - number: 8
