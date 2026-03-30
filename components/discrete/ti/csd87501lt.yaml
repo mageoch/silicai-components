@@ -1,0 +1,123 @@
+$schema: "https://mageoch.github.io/silicai/schema/component.schema.json"
+$schema_version: "0.1.0"
+
+component:
+  mpn: CSD87501LT
+  manufacturer: Texas Instruments
+  category: discrete
+  package: PicostAr-10
+  lcsc: C2841784
+  datasheet: "https://www.ti.com/lit/ds/symlink/csd87501lt.pdf"
+  kicad_symbol: "EasyEDA:CSD87501LT"
+
+  description: >
+    Dual 30 V N-channel NexFET power MOSFET in common-drain (back-to-back) configuration.
+    Designed for USB power path, load switch, and reverse-current blocking applications.
+    R_DS(on) = 7.8 mΩ (Q1+Q2 in series at 10 V), 14 A continuous drain current.
+
+  temperature_range:
+    operating:
+      min: { value: -55, unit: °C }
+      max: { value: 150, unit: °C }
+    storage:
+      min: { value: -55, unit: °C }
+      max: { value: 150, unit: °C }
+    junction_max: { value: 150, unit: °C }
+
+  absolute_maximum_ratings:
+    - parameter: drain_to_source_voltage
+      pins: [S1, S2]
+      unit: V
+      max: 30
+    - parameter: gate_to_source_voltage_q1
+      pins: [G1]
+      unit: V
+      min: -8
+      max: 8
+    - parameter: gate_to_source_voltage_q2
+      pins: [G2]
+      unit: V
+      min: -8
+      max: 8
+    - parameter: continuous_drain_current
+      pins: [S1, S2]
+      unit: A
+      max: 14
+    - parameter: power_dissipation
+      pins: []
+      unit: W
+      max: 2.5
+
+  recommended_operating_conditions:
+    - parameter: vgs_q1_on
+      pins: [G1]
+      unit: V
+      min: 4.5
+      max: 8
+      note: "Minimum 4.5 V gate drive for full enhancement."
+    - parameter: vgs_q2_on
+      pins: [G2]
+      unit: V
+      min: 4.5
+      max: 8
+      note: "Minimum 4.5 V gate drive for full enhancement."
+
+  rails:
+    - id: vbus_in
+      net: VBUS
+    - id: vsys
+      net: VSYS
+
+  pins:
+    # FET1 source — multiple parallel pads for current sharing (VBUS side)
+    - number: A1
+      name: S1_A
+      direction: passive
+      rail: vbus_in
+      description: "FET1 source. Connect all S1 pins together to VBUS input."
+    - number: B1
+      name: S1_B
+      direction: passive
+      rail: vbus_in
+    - number: D1
+      name: S1_C
+      direction: passive
+      rail: vbus_in
+    - number: E1
+      name: S1_D
+      direction: passive
+      rail: vbus_in
+
+    # FET2 source — multiple parallel pads for current sharing (VSYS side)
+    - number: A2
+      name: S2_A
+      direction: passive
+      rail: vsys
+      description: "FET2 source. Connect all S2 pins together to VSYS output."
+    - number: B2
+      name: S2_B
+      direction: passive
+      rail: vsys
+    - number: D2
+      name: S2_C
+      direction: passive
+      rail: vsys
+    - number: E2
+      name: S2_D
+      direction: passive
+      rail: vsys
+
+    # Gate pins — driven by TPS25730SRSMR GATE_VBUS / GATE_VSYS
+    - number: C1
+      name: G1
+      direction: input
+      primary_function:
+        type: gpio
+      description: "Gate of FET1 (VBUS side). Drive from TPS25730 GATE_VBUS."
+
+    - number: C2
+      name: G2
+      direction: input
+      primary_function:
+        type: gpio
+      description: "Gate of FET2 (VSYS side). Drive from TPS25730 GATE_VSYS."

@@ -1,0 +1,408 @@
+$schema: "https://mageoch.github.io/silicai/schema/component.schema.json"
+$schema_version: "0.1.0"
+
+component:
+  mpn: TPS25730SRSMR
+  manufacturer: Texas Instruments
+  category: power_ic
+  package: VQFN-32-EP
+  lcsc: C22390380
+  datasheet: "https://www.ti.com/lit/ds/symlink/tps25730.pdf"
+  kicad_symbol: "EasyEDA:TPS25730SRSMR"
+
+  description: >
+    USB Type-C and USB PD3.1 sink-only controller with external FET gate drivers
+    (GATE_VBUS, GATE_VSYS), CC logic, I2C interface, and ADC pin-strap configuration.
+    Requires external back-to-back N-channel MOSFETs for the power path.
+
+  temperature_range:
+    operating:
+      min: { value: -40, unit: °C }
+      max: { value: 125, unit: °C }
+    storage:
+      min: { value: -55, unit: °C }
+      max: { value: 150, unit: °C }
+    junction_max: { value: 175, unit: °C }
+    thermal_resistance_ja: { value: 57.4, unit: °C/W }
+
+  power_consumption:
+    - mode: active_sink
+      description: "Active Sink mode — negotiating/sinking power from USB PD source"
+      rail: vin_3v3
+      current: { value: 3, unit: mA }
+      current_max: { value: 6, unit: mA }
+      conditions: "22V >= VBUS >= 4.0V, VIN_3V3=3.3V"
+    - mode: sleep
+      description: "Sleep mode — VBUS absent"
+      rail: vin_3v3
+      current: { value: 56, unit: µA }
+      conditions: "VBUS=0V, VIN_3V3=3.3V"
+
+  absolute_maximum_ratings:
+    - parameter: vin_3v3_voltage
+      pins: [VIN_3V3]
+      unit: V
+      min: -0.3
+      max: 4.0
+    - parameter: adcinx_voltage
+      pins: [ADCIN1, ADCIN2, ADCIN3, ADCIN4]
+      unit: V
+      min: -0.3
+      max: 4.0
+    - parameter: vbus_voltage
+      pins: [VBUS]
+      unit: V
+      min: -0.3
+      max: 28
+    - parameter: cc_pins_voltage
+      pins: [CC1, CC2]
+      unit: V
+      min: -0.5
+      max: 26
+    - parameter: vsys_voltage
+      pins: [VSYS]
+      unit: V
+      min: -0.3
+      max: 28
+    - parameter: gate_voltage
+      pins: [GATE_VBUS, GATE_VSYS]
+      unit: V
+      min: -0.3
+      max: 28
+    - parameter: i2c_pins_voltage
+      pins: [I2Ct_SCL, I2Ct_SDA]
+      unit: V
+      min: -0.3
+      max: 4.0
+    - parameter: ldo_1v5_voltage
+      pins: [LDO_1V5]
+      unit: V
+      min: -0.3
+      max: 2.0
+    - parameter: ldo_3v3_voltage
+      pins: [LDO_3V3]
+      unit: V
+      min: -0.3
+      max: 4.0
+
+  recommended_operating_conditions:
+    - parameter: vin_3v3_voltage
+      pins: [VIN_3V3]
+      unit: V
+      min: 3.0
+      max: 3.6
+    - parameter: vbus_voltage
+      pins: [VBUS]
+      unit: V
+      min: 4
+      max: 22
+    - parameter: i2c_sda_scl_voltage
+      pins: [I2Ct_SDA, I2Ct_SCL]
+      unit: V
+      min: 0
+      max: 3.6
+
+  rails:
+    - id: vin_3v3
+      net: VIN_3V3
+    - id: ldo_3v3
+      net: LDO_3V3
+    - id: ldo_1v5
+      net: LDO_1V5
+    - id: vbus
+      net: VBUS
+    - id: vsys
+      net: VSYS
+
+  pins:
+    - number: 32
+      name: VIN_3V3
+      direction: power_in
+      must_connect: true
+      rail: vin_3v3
+      decoupling:
+        - type: capacitor
+          capacitance: { value: 10, unit: µF }
+          voltage_rating: { value: 6.3, unit: V }
+          dielectric: [X5R, X7R]
+          placement: close
+          note: "Recommended 5–10 µF on VIN_3V3."
+      description: "Supply for core logic and I/O. Operating range 3.0–3.6 V."
+
+    - number: 1
+      name: LDO_3V3
+      direction: power_out
+      rail: ldo_3v3
+      decoupling:
+        - type: capacitor
+          capacitance: { value: 10, unit: µF }
+          voltage_rating: { value: 6.3, unit: V }
+          dielectric: [X5R, X7R]
+          placement: close
+          note: "Recommended 5–25 µF on LDO_3V3."
+      description: "3.3 V LDO output from VBUS. Cannot drive heavy external loads."
+
+    - number: 4
+      name: LDO_1V5
+      direction: power_out
+      rail: ldo_1v5
+      decoupling:
+        - type: capacitor
+          capacitance: { value: 10, unit: µF }
+          voltage_rating: { value: 4, unit: V }
+          dielectric: [X5R, X7R]
+          placement: close
+          note: "Internal use only — do not load externally."
+      description: "1.5 V core LDO output. Internal use only."
+
+    - number: 26
+      name: VBUS_A
+      direction: power_in
+      rail: vbus
+      decoupling:
+        - type: capacitor
+          capacitance: { value: 4.7, unit: µF }
+          voltage_rating: { value: 25, unit: V }
+          dielectric: [X5R, X7R]
+          placement: close
+          note: "Both VBUS pins must be shorted together on the PCB."
+      description: "VBUS input. Connect to USB connector VBUS."
+
+    - number: 27
+      name: VBUS_B
+      direction: power_in
+      rail: vbus
+      description: "VBUS input — short to VBUS_A on PCB."
+
+    - number: 19
+      name: VSYS
+      direction: power_in
+      rail: vsys
+      decoupling:
+        - type: capacitor
+          capacitance: { value: 47, unit: µF }
+          voltage_rating: { value: 25, unit: V }
+          dielectric: [X5R, X7R]
+          placement: close
+          note: "Bulk output capacitor on VSYS."
+      description: "System power output node (post external FET). Connect to CSD87501LT S2."
+
+    - number: 20
+      name: GATE_VSYS
+      direction: output
+      primary_function:
+        type: gpio
+      description: >
+        Gate driver output for the VSYS-side N-channel FET of the external back-to-back
+        MOSFET pair (CSD87501LT G2). Drives high to enable power flow to VSYS.
+
+    - number: 21
+      name: GATE_VBUS
+      direction: output
+      primary_function:
+        type: gpio
+      description: >
+        Gate driver output for the VBUS-side N-channel FET of the external back-to-back
+        MOSFET pair (CSD87501LT G1). Drives high to enable power flow from VBUS.
+
+    - number: 24
+      name: CC1
+      direction: bidirectional
+      primary_function:
+        type: analog_in
+      description: "CC1 I/O for USB Type-C plug detection, orientation, and USB PD BMC."
+      externals:
+        - type: capacitor
+          required: true
+          capacitance: { value: 400, unit: pF }
+          from: CC1
+          to: GND
+          scope: component
+          note: "Recommended 400 pF (200–480 pF) to GND per USB PD spec."
+
+    - number: 25
+      name: CC2
+      direction: bidirectional
+      primary_function:
+        type: analog_in
+      description: "CC2 I/O for USB Type-C plug detection, orientation, and USB PD BMC."
+      externals:
+        - type: capacitor
+          required: true
+          capacitance: { value: 400, unit: pF }
+          from: CC2
+          to: GND
+          scope: component
+          note: "Recommended 400 pF (200–480 pF) to GND per USB PD spec."
+
+    - number: 9
+      name: I2Ct_SCL
+      direction: input
+      primary_function:
+        type: i2c_scl
+      description: "I2C target clock. Pull up to LDO_3V3 through 4.7 kΩ."
+      externals:
+        - type: resistor
+          required: true
+          resistance: { value: 4.7, unit: kΩ }
+          from: I2Ct_SCL
+          to: LDO_3V3
+          scope: bus
+
+    - number: 8
+      name: I2Ct_SDA
+      direction: bidirectional
+      open_drain: true
+      primary_function:
+        type: i2c_sda
+      description: "I2C target data open-drain. Pull up to LDO_3V3 through 4.7 kΩ."
+      externals:
+        - type: resistor
+          required: true
+          resistance: { value: 4.7, unit: kΩ }
+          from: I2Ct_SDA
+          to: LDO_3V3
+          scope: bus
+
+    - number: 2
+      name: ADCIN1
+      direction: input
+      primary_function:
+        type: adc
+      description: "Pin-strap configuration input. Connect to resistor divider from LDO_3V3."
+
+    - number: 3
+      name: ADCIN2
+      direction: input
+      primary_function:
+        type: adc
+      description: "Pin-strap configuration input. Connect to resistor divider from LDO_3V3."
+
+    - number: 5
+      name: ADCIN3
+      direction: input
+      primary_function:
+        type: adc
+      description: "Pin-strap configuration input. Connect to resistor divider from LDO_3V3."
+
+    - number: 7
+      name: ADCIN4
+      direction: input
+      primary_function:
+        type: adc
+      description: "Pin-strap configuration input. Connect to resistor divider from LDO_3V3."
+
+    - number: 6
+      name: CAP_MIS
+      direction: output
+      open_drain: true
+      primary_function:
+        type: gpio
+      description: "Capability Mismatch indicator. Open-drain, active high."
+
+    - number: 18
+      name: ~{SINK_EN}
+      direction: output
+      open_drain: true
+      primary_function:
+        type: enable
+        polarity: active_low
+      description: "Sink path enabled indicator. 0: enabled, 1: disabled."
+
+    - number: 31
+      name: PLUG_EVENT
+      direction: output
+      open_drain: true
+      primary_function:
+        type: gpio
+      description: "Connection present indicator. Open-drain."
+
+    - number: 10
+      name: DBG_ACC
+      direction: output
+      open_drain: true
+      primary_function:
+        type: gpio
+      description: "Debug accessory attached indicator. Open-drain."
+
+    - number: 13
+      name: PLUG_FLIP
+      direction: output
+      open_drain: true
+      primary_function:
+        type: gpio
+      description: "Cable orientation indicator. 1: CC2 active (flipped)."
+
+    - number: 17
+      name: ~{FAULT_IN}
+      direction: input
+      primary_function:
+        type: interrupt
+        polarity: active_low
+      description: "Fault input — drives disconnect from port when asserted low."
+
+    - number: 11
+      name: GND_A
+      direction: power_in
+      net: GND
+
+    - number: 12
+      name: GND_B
+      direction: power_in
+      net: GND
+
+    - number: 14
+      name: GND_C
+      direction: power_in
+      net: GND
+
+    - number: 15
+      name: GND_D
+      direction: power_in
+      net: GND
+
+    - number: 16
+      name: GND_E
+      direction: power_in
+      net: GND
+
+    - number: 28
+      name: GND_F
+      direction: power_in
+      net: GND
+
+    - number: 29
+      name: GND_G
+      direction: power_in
+      net: GND
+
+    - number: 33
+      name: GND_EP
+      direction: power_in
+      net: GND
+      description: "Exposed pad. Connect to ground plane with thermal vias."
+
+    - number: 22
+      name: RESERVED_A
+      direction: no_connect
+      description: "Reserved. Tie to GND or LDO_3V3."
+
+    - number: 23
+      name: RESERVED_B
+      direction: no_connect
+      description: "Reserved. Tie to GND or LDO_3V3."
+
+    - number: 30
+      name: RESERVED_C
+      direction: no_connect
+      description: "Reserved. Tie to GND or LDO_3V3."
+
+  interfaces:
+    - type: I2C
+      instance: 1
+      role: target
+      speed_max: { value: 800, unit: kHz }
+      pins:
+        scl: I2Ct_SCL
+        sda: I2Ct_SDA
+      note: "Optional — device operates standalone via pin strapping."
