@@ -1,0 +1,119 @@
+$schema: "https://mageoch.github.io/silicai/schema/component.schema.json"
+$schema_version: "0.1.0"
+
+component:
+  mpn: TYPE-C-31-M-12
+  manufacturer: Korean Hroparts Elec
+  category: connector
+  package: SMD
+  lcsc: C165948
+  datasheet: "https://www.lcsc.com/datasheet/lcsc_datasheet_2205251630_Korean-Hroparts-Elec-TYPE-C-31-M-12_C165948.pdf"
+  description: >
+    16-pin female USB Type-C SMD right-angle receptacle, 20V/5A, 10,000 mating cycles.
+
+  temperature_range:
+    operating:
+      min: { value: -30, unit: °C }
+      max: { value: 80, unit: °C }
+
+  absolute_maximum_ratings:
+    - parameter: voltage
+      pins: [VBUS]
+      unit: V
+      max: 20
+    - parameter: current
+      pins: [VBUS]
+      unit: A
+      max: 5
+
+  rails:
+    - id: vbus
+      net: VBUS
+
+  pins:
+    - number: 1
+      name: GND
+      direction: power_in
+      net: GND
+
+    - number: 2
+      name: TX1P
+      direction: bidirectional
+      primary_function:
+        type: usb_dp
+
+    - number: 3
+      name: TX1N
+      direction: bidirectional
+      primary_function:
+        type: usb_dm
+
+    - number: 4
+      name: VBUS
+      direction: power_in
+      rail: vbus
+
+    - number: 5
+      name: CC1
+      direction: bidirectional
+
+    - number: 6
+      name: DP
+      direction: bidirectional
+      primary_function:
+        type: usb_dp
+
+    - number: 7
+      name: DN
+      direction: bidirectional
+      primary_function:
+        type: usb_dm
+
+    - number: 8
+      name: SBU1
+      direction: bidirectional
+
+    - number: 9
+      name: VBUS2
+      direction: power_in
+      rail: vbus
+
+    - number: 10
+      name: RX2N
+      direction: bidirectional
+
+    - number: 11
+      name: RX2P
+      direction: bidirectional
+
+    - number: 12
+      name: GND2
+      direction: power_in
+      net: GND
+
+    - number: 13
+      name: SHELL1
+      direction: passive
+      net: SHIELD
+
+    - number: 14
+      name: SHELL2
+      direction: passive
+      net: SHIELD
+
+    - number: 15
+      name: SHELL3
+      direction: passive
+      net: SHIELD
+
+    - number: 16
+      name: SHELL4
+      direction: passive
+      net: SHIELD
+
+  interfaces:
+    - type: USB
+      instance: 1
+      pins:
+        dp: DP
+        dm: DN
