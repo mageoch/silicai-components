@@ -7,6 +7,7 @@ component:
   category: mcu
   package: QFN-80
   datasheet: "https://datasheets.raspberrypi.com/rp2350/rp2350-datasheet.pdf"
+  lcsc: "C39843328"
   kicad_symbol: "MCU_RaspberryPi:RP2354B"
   description: >
     Raspberry Pi RP2354B microcontroller in QFN-80 (10×10 mm) package with embedded 2 MB PSRAM.

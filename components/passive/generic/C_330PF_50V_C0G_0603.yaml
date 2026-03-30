@@ -1,0 +1,31 @@
+$schema: "https://mageoch.github.io/silicai/schema/component.schema.json"
+$schema_version: "0.1.0"
+
+component:
+  mpn: C_330PF_50V_C0G_0603
+  manufacturer: generic
+  category: passive
+  package: "0603"
+  description: 330pF ±5% 50V C0G MLCC capacitor, 0603.
+
+  specifications:
+    capacitance:    { value: 330, unit: pF }
+    tolerance:      { value: 5, unit: "%" }
+    voltage_rating: { value: 50, unit: V }
+    dielectric:     C0G
+
+  rails:
+    - id: A
+      net: NET_A
+    - id: B
+      net: NET_B
+
+  pins:
+    - number: 1
+      name: A
+      direction: passive
+      rail: A
+    - number: 2
+      name: B
+      direction: passive
+      rail: B
